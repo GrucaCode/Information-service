@@ -1,28 +1,30 @@
 const fontToggles = document.querySelectorAll('.data-aaa');
-const aIcons = document.querySelector('.data-icon-a-plus');
-const html = document.documentElement;
+const aIcons = document.querySelectorAll('.data-icon-a-plus');
+const root = document.documentElement;
 
 let currentSize = 1;
-const minSize = 1; 
-const maxSize = 2;
+const fontSizes = [1, 1.5, 2];
 
-fontToggles.forEach((fontToggle) => {
-  fontToggle.addEventListener('click', (e) => {
+const fontAdjust = (e) => {
     e.preventDefault();
 
-    if (currentSize === 1) {
-      currentSize = 1.5;
-    } else if (currentSize === 1.5) {
-      currentSize = 2;
-
+    if (currentSize === fontSizes[0]) {
+      currentSize = fontSizes[1];
+    } else if (currentSize === fontSizes[1]) {
+      currentSize = fontSizes[2];
     } else {
-      currentSize = 1;
+      currentSize = fontSizes[0];
     }
 
-    html.style.fontSize = currentSize + 'rem';
-
-    document.querySelectorAll('.data-icon-a-plus').forEach(icon => {
-      icon.textContent = currentSize === 2 ? 'text_decrease' : 'text_increase';
+    root.style.fontSize = currentSize + 'rem';
+    
+    const iconText = currentSize === fontSizes[2] ? 'text_decrease' : 'text_increase';
+    aIcons.forEach(aIcon => {
+      aIcon.textContent = iconText;
     });
-  });
+}
+
+fontToggles.forEach((fontToggle) => {
+  fontToggle.addEventListener('click', fontAdjust);
 });
+
