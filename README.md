@@ -1,6 +1,6 @@
-# Web application – information service with a special focus on the needs and barriers of older adults
+# Mobile information service with a special focus on the needs and barriers of older adults
 
-This application was developed as part of my Master’s thesis project. It was designed in accordance with WCAG guidelines, with a primary focus on older adults, who were the subject of my research.
+This application was developed as part of my Master’s thesis project. It was designed in accordance with WCAG guidelines, with a primary focus on older adults, who were the subject of my research. Information from the world are 
 
 I am continuously expanding my programming knowledge and see opportunities to further improve this project. Therefore, I am currently refactoring the codebase to enhance its quality and maintainability.
 
@@ -27,6 +27,10 @@ The service consists of:
     <li>
       <p>Font adjustment feature</p>
       <img src="docs/font-adjustment.png" width="400"/>
+    </li>
+    <li>
+      <p>Voice search tutorial based on JS library Intro.js</p>
+      <img src="docs/tutorial.png" width="200"/>
     </li>
   </ul>
 </div>
