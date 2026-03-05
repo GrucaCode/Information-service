@@ -188,6 +188,7 @@ table {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 4px;
   min-height: 70px;
   min-width: 70px;
@@ -490,6 +491,18 @@ table {
   display: flex;
   justify-content: center;
 }
+.register-sec__avatar {
+  display: flex;
+  flex-direction: column;
+  width: 155px;
+}
+.register-sec__avatar .freepik-info {
+  font-size: 10px;
+  align-self: center;
+}
+.register-sec__avatar .freepik-info__link {
+  color: #005F67;
+}
 .register-sec .clean-btn-wrapper {
   display: flex;
   align-items: center;
@@ -701,6 +714,17 @@ a {
 }
 .user-sec .data-sec .user-data__value {
   font-weight: 600;
+}
+.user-sec .data-sec .user-data__avatar {
+  display: flex;
+  flex-direction: column;
+}
+.user-sec .data-sec .user-data__avatar .freepik-info {
+  font-size: 10px;
+  align-self: center;
+}
+.user-sec .data-sec .user-data__avatar .freepik-info__link {
+  color: #005F67;
 }
 
 .profile-drop-up-btn {

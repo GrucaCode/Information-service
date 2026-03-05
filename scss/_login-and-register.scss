@@ -142,6 +142,21 @@
             justify-content: center;
         }
     }
+
+    &__avatar {
+        display: flex;
+        flex-direction: column;
+        width: 155px;
+
+        .freepik-info {
+            font-size: 10px;
+            align-self: center;
+            &__link {
+                color:#005F67;
+            }
+        }
+    }
+
     .clean-btn-wrapper {
         display: flex;
         align-items: center;

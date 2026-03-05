@@ -88,6 +88,19 @@ a {
             &__value {
                 font-weight: 600;
             }
+
+            &__avatar {
+                display: flex;
+                flex-direction: column;
+
+                .freepik-info {
+                    font-size: 10px;
+                    align-self: center;
+                    &__link {
+                        color:#005F67;
+                    }
+                }
+            }
         }
     }
 }
