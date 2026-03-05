@@ -22,11 +22,12 @@ The service consists of:
 
 ## Main Features
 
+All features are specially adapted for older adults and designed to make the application easier to use. You can see how they work in the demo app version, which will be available soon.
+Key features include:
 <div>
   <ul>
     <li>
       <p>Font adjustment feature</p>
-      <img src="docs/font-adjustment.png" width="400"/>
     </li>
     <li>
       <p>Voice searching tutorial based on JS library Intro.js</p>
@@ -42,6 +43,9 @@ The service consists of:
     </li>
     <li>
       <p>Text and voice articles searching (provided by Web Speech API)</p>
+    </li>
+    <li>
+      <p>Log in and register </p>
     </li>
   </ul>
 </div>
