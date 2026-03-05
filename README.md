@@ -1,6 +1,6 @@
 # Mobile information service with a special focus on the needs and barriers of older adults
 
-This application was developed as part of my Master’s thesis project. It was designed in accordance with WCAG guidelines, with a primary focus on older adults, who were the subject of my research. Information from the world are 
+This application was developed as part of my Master’s thesis project. It was designed in accordance with WCAG guidelines, with a primary focus on older adults, who were the subject of my research. Global news are fetched using the World News API.
 
 I am continuously expanding my programming knowledge and see opportunities to further improve this project. Therefore, I am currently refactoring the codebase to enhance its quality and maintainability.
 
@@ -29,8 +29,19 @@ The service consists of:
       <img src="docs/font-adjustment.png" width="400"/>
     </li>
     <li>
-      <p>Voice search tutorial based on JS library Intro.js</p>
-      <img src="docs/tutorial.png" width="200"/>
+      <p>Voice searching tutorial based on JS library Intro.js</p>
+    </li>
+    <li>
+      <p>Content carousel displaying the five latest world news articles.</p>
+    </li>
+    <li>
+      <p>Possibility to save article to read it later</p>
+    </li>
+    <li>
+      <p>Intuitive navigation - with a top and bottom menu providing access to key functions, along with a hamburger menu featuring a clear hierarchy of all important links.</p>
+    </li>
+    <li>
+      <p>Text and voice articles searching (provided by Web Speech API)</p>
     </li>
   </ul>
 </div>
