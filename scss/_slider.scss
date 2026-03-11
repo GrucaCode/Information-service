@@ -10,6 +10,12 @@
             }
             &__slides {
                 position: relative;
+                .article {
+                    display: none;
+                }
+                .article.active {
+                    display: block;
+                }
             }
             &__dots {
                 margin-bottom: 15px;

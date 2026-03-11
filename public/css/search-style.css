@@ -179,6 +179,12 @@ table {
 .slider__slides {
   position: relative;
 }
+.slider__slides .article {
+  display: none;
+}
+.slider__slides .article.active {
+  display: block;
+}
 .slider__dots {
   margin-bottom: 15px;
   display: flex;
