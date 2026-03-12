@@ -840,6 +840,12 @@ a {
 .user-sec .data-sec__wrapper {
   margin-bottom: 30px;
 }
+.user-sec .data-sec .data-data-sec {
+  display: block;
+}
+.user-sec .data-sec .data-data-sec.hidden {
+  display: none;
+}
 .user-sec .data-sec__title {
   display: flex;
   align-items: center;

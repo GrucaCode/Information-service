@@ -52,10 +52,16 @@ a {
         &__wrapper {
             margin-bottom: 30px;
         }
+        .data-data-sec {
+            display: block;
+        }
+        .data-data-sec.hidden {
+            display: none;
+        }
         &__title {
             display: flex;
             align-items: center;
-            }
+        }
         &__h {
             font-size: 1.25rem;
         }
