@@ -122,10 +122,11 @@
                 <form id="login-form" class="login-form">
                     <label for="email" class="login-form__label">Adres e-mail:</label>
                     <input type="email" id="email" name="email" placeholder="Wpisz e-mail" required
-                        class="login-form__input" autocomplete="email" />
+                        class="login-form__input data-register-input" autocomplete="email" />
                     <label for="password" class="login-form__label">Hasło:</label>
                     <input type="password" id="password" name="password" placeholder="Wpisz hasło" required
-                        class="login-form__input" id="login-password" autocomplete="current-password" />
+                        class="login-form__input data-register-input" id="login-password"
+                        autocomplete="current-password" />
                     <div class="see-pass-btn-wrapper">
                         <p class="see-pass-text data-see-pass-text">Zobacz hasło</p>
                         <button class="see-pass-btn">
@@ -177,21 +178,21 @@
                 <form id="register-form" class="register-form data-register-form">
                     <label for="firstName" class="register-form__label">Imię:</label>
                     <input type="text" id="firstName" name="firstName" placeholder="Wpisz imię" required
-                        autocomplete="given-name" class="register-form__input" />
+                        autocomplete="given-name" class="register-form__input data-register-input" />
 
                     <label for="lastName" class="register-form__label">Nazwisko:</label>
                     <input type="text" id="lastName" name="lastName" placeholder="Wpisz nazwisko" required
-                        autocomplete="family-name" class="register-form__input" />
+                        autocomplete="family-name" class="register-form__input data-register-input" />
 
                     <div class="register-form__labels">
                         <label for="email" class="register-form__label">E-mail:</label>
                         <p class="register-form__label-additional">imię@example.com</p>
                     </div>
                     <input type="email" id="email" name="email" placeholder="Wpisz e-mail" required autocomplete="email"
-                        class="register-form__input" />
+                        class="register-form__input data-register-input" />
                     <label for="password" class="register-form__label">Hasło:</label>
                     <input type="password" id="password" name="password" placeholder="Wpisz hasło" required
-                        class="register-form__input" />
+                        class="register-form__input data-register-input" />
 
                     <div class="see-pass-btn-wrapper">
                         <p class="see-pass-text data-see-pass-text">Zobacz hasło</p>

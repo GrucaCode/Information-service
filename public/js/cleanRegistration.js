@@ -1,27 +1,32 @@
-const cleanBtn = document.querySelector(".clean-btn");
 const registerForm = document.getElementById("register-form");
+const cleanBtn = document.querySelector(".clean-btn");
+const registerMessage = document.getElementById("register-message")
 const registerBtn = registerForm?.querySelector(".data-register-submit-btn");
 const registerFrame = registerForm?.querySelector(".data-submit-frame");
 
-function updateSubmitState() {
+const updateSubmitState = () => {
   if (!registerForm || !registerBtn || !registerFrame) return;
   const { firstName, lastName, email, password } = registerForm;
-  const ready = [firstName, lastName, email, password].every(i => i.value.trim());
-  registerBtn.disabled = !ready;
-  registerBtn.classList.toggle("active", ready);
-  registerFrame.classList.toggle("frame-active", ready);
+  const isFormFilled = [firstName, lastName, email, password].every(i => i.value.trim());
+
+  registerBtn.disabled = !isFormFilled;
+  registerBtn.classList.toggle("active", isFormFilled);
+  registerFrame.classList.toggle("frame-active", isFormFilled);
+}
+
+const cleanRegisterForm = (e) => {
+  e.preventDefault();
+  registerForm.reset();
+  registerMessage.textContent = "";
+  updateSubmitState();
 }
 
 if (cleanBtn && registerForm) {
-  cleanBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    registerForm.reset();
-    document.getElementById("register-message").textContent = "";
-    updateSubmitState();
-  });
+  cleanBtn.addEventListener("click", cleanRegisterForm)
 }
 
 ["input", "change"].forEach(evt =>
   registerForm?.addEventListener(evt, updateSubmitState)
 );
+
 updateSubmitState();
