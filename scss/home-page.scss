@@ -8,30 +8,31 @@
 @use "menu-hamburger.scss";
 @use "tutorial-pop-up.scss";
 @use "tutorial.scss";
+@use 'variables' as *;
 
 a {
     text-decoration: none;
-    color: #000;
+    color: $color-black;
     }
 .articles-sec {
     margin-bottom: 80px;
     &__title {
         display: flex;
         align-items: center;
-        }
+    }
     &__h {
         font-size: 1.25rem;
     }
     .arrow-right {
         font-size: 50px;
-        color: #E99576;
+        color: $color-pink;
     }
     .article {
         display: flex;
         display: none;
         flex-direction: column;
         justify-content: center;
-        background-color: #FFDACE;
+        background-color: $color-light-pink;
         &__image-container {
             width: 100%;
             height: auto;
@@ -64,15 +65,15 @@ a {
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #005F67;
+            background-color: $color-dark-green;
             font-size: .875rem;
-            color: #fff;
+            color: $color-white;
 
             &__frame {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                border: #fff 1px solid;
+                border: $color-white 1px solid;
                 min-width: 154px;
                 min-height: 54px;
                 padding: 21px 33px;

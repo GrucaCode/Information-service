@@ -391,7 +391,7 @@ body.no-scroll {
   overflow: auto;
   background: #fff;
   padding: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
 }
 .tuts__icon {
   font-size: 30px;
@@ -470,7 +470,7 @@ body.no-scroll {
   text-decoration: none;
   background-color: #005F67;
   box-shadow: 0;
-  border: 1px solid #000;
+  border: 1px solid #020202;
   color: #fff;
   box-shadow: none;
 }
@@ -504,7 +504,7 @@ body.no-scroll {
   width: 80px;
   font-size: 20px;
   font-family: "Poppins", sans-serif;
-  color: #000;
+  color: #020202;
 }
 
 .introjs-tooltiptext {
@@ -518,7 +518,7 @@ body.no-scroll {
 
 a {
   text-decoration: none;
-  color: #000;
+  color: #020202;
 }
 
 .articles-sec {

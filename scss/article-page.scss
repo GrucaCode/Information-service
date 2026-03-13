@@ -8,11 +8,12 @@
 @use "menu-hamburger.scss";
 @use "tutorial-pop-up.scss";
 @use "tutorial.scss";
+@use 'variables' as *;
 
 a {
     text-decoration: none;
-    color: #000;
-    }
+    color: $color-black;
+}
 
 .hero {
     background: transparent;
@@ -63,8 +64,7 @@ a {
     }
     &__img {
         z-index: 9999;
-        display: blo
-        ck;
+        display: block;
         width: 100%;
         height: auto;
         object-fit: contain;
@@ -87,7 +87,7 @@ a {
         }
         .arrow-right {
             font-size: 30px;
-            color: #005F70;
+            color: $color-dark-green;
         }
         .btn-full {
             display: block;
@@ -105,9 +105,9 @@ a {
     align-items: center;
     padding: 3px;
     margin-bottom: 25px;
-    background-color: #005F67;
+    background-color: $color-dark-green;
     font-size: .875rem;
-    color: #fff;
+    color: $color-white;
     position: fixed;
     bottom: 120px;
     right: 0px;
@@ -117,7 +117,7 @@ a {
         justify-content: center;
         align-items: center;
         gap: 10px;
-        border: #fff 1px solid;
+        border: $color-white 1px solid;
         padding: 13px 18px;
     }
 }

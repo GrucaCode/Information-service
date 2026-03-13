@@ -9,10 +9,11 @@
 @use "login-and-register";
 @use "tutorial-pop-up.scss";
 @use "tutorial.scss";
+@use 'variables' as *;
 
 a {
     text-decoration: none;
-    color: #000;
+    color: $color-black;
 }
 
 .user-sec {
@@ -31,14 +32,14 @@ a {
             width: 44px;
             height: 44px;
             padding: 3px;
-            background-color: #005F67;
+            background-color: $color-dark-green;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #A23205;
-            color: #fff;               
+            background-color: $color-brown;
+            color: $color-white;               
             &__frame {
-                border: #fff 1px solid;
+                border: $color-white 1px solid;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -67,7 +68,7 @@ a {
         }
         .arrow-right {
             font-size: 50px;
-            color: #E99576;
+            color: $color-pink;
         }
         .user-data {
             &__img-info1 {

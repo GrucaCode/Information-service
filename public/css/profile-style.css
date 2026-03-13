@@ -452,12 +452,12 @@ table {
   margin: 40px 0;
   padding: 3px;
   background-color: #e2e2e2;
-  color: #000;
+  color: #020202;
   align-self: center;
   cursor: not-allowed;
 }
 .login-sec .login-form .login-submit-btn__frame {
-  border: #000 1px solid;
+  border: #020202 1px solid;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -626,12 +626,12 @@ table {
   margin: 40px 0;
   padding: 3px;
   background-color: #e2e2e2;
-  color: #000;
+  color: #020202;
   align-self: center;
   cursor: not-allowed;
 }
 .register-sec .register-form .register-submit-btn__frame {
-  border: #000 1px solid;
+  border: #020202 1px solid;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -672,7 +672,7 @@ body.no-scroll {
   overflow: auto;
   background: #fff;
   padding: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
 }
 .tuts__icon {
   font-size: 30px;
@@ -751,7 +751,7 @@ body.no-scroll {
   text-decoration: none;
   background-color: #005F67;
   box-shadow: 0;
-  border: 1px solid #000;
+  border: 1px solid #020202;
   color: #fff;
   box-shadow: none;
 }
@@ -785,7 +785,7 @@ body.no-scroll {
   width: 80px;
   font-size: 20px;
   font-family: "Poppins", sans-serif;
-  color: #000;
+  color: #020202;
 }
 
 .introjs-tooltiptext {
@@ -799,7 +799,7 @@ body.no-scroll {
 
 a {
   text-decoration: none;
-  color: #000;
+  color: #020202;
 }
 
 .user-sec {

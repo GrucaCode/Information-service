@@ -1,0 +1,19 @@
+// Primary colors
+$color-light-pink: #FFDACE;
+$color-pink: #E99576;
+$color-brown: #A23205;
+$color-black: #020202; 
+$color-white: #fff;
+$color-dark-green: #005F67;
+$color-light-green: rgba(131, 197, 190, 0.30);
+$color-shadow: rgba(0, 0, 0, 0.7);
+
+// Gradients
+$gradient-green-pink: linear-gradient(180deg, rgba(131, 197, 190, 0.30) 0%, #FFDACE 100%);
+$gradient-pink-green: linear-gradient(180deg, #FFDACE 0%, rgba(131, 197, 190, 0.30) 100%);
+
+// Semantic colors
+$color-error: #B60003;
+$color-disabled: #e2e2e2;
+$color-unable: #ccc;
+
