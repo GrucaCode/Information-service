@@ -3,8 +3,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   const tmpId   = qs.get("id");        // localStorage
   const savedId = qs.get("savedId");   // zapisane wiadomości w bazie
 
-  const $ = (sel) => document.querySelector(sel);
-  const toPLDate = (d) => d ? new Date(d).toLocaleDateString("pl-PL") : "—";
+  // const $ = (sel) => document.querySelector(sel);
+
+  const toPLDate = (date) => {
+    if (!date) return "—";
+    const dataObj = new Date(date);
+    return dataObj.toLocaleDateString("pl-PL");
+  }
+
   const splitIntoParagraphs = (text, maxSentencesPerPara = 4) => {
     if (!text) return [];
     const sentences = text.split(/(?<=[.!?])\s+/);
@@ -12,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     while (sentences.length) paras.push(sentences.splice(0, maxSentencesPerPara).join(" "));
     return paras;
   };
+
   const buildLead = (text, fallback = "") => {
     if (!text) return fallback || "";
     const firstTwo = text.split(/(?<=[.!?])\s+/).slice(0, 2).join(" ");
@@ -65,14 +72,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  const titleEl  = $(".data-news-title");
-  const imgEl    = $(".data-news-image");
-  const textEl   = $(".data-news-text");
-  const sumEl    = $(".data-news-sum");
-  const authorEl = $(".data-news-author");
-  const dateEl   = $(".data-publish-date");
-  const fullBtn  = $(".btn-full");
-  const saveBtn  = $("#save-article-btn");
+  const titleEl = document.querySelector(".data-news-title");
+  const imgEl = document.querySelector(".data-news-image");
+  const textEl = document.querySelector(".data-news-text");
+  const sumEl = document.querySelector(".data-news-sum");
+  const authorEl = document.querySelector(".data-news-author");
+  const dateEl = document.querySelector(".data-publish-date");
+  const fullBtn = document.querySelector(".btn-full");
+  const saveBtn = document.querySelector("#save-article-btn");
 
   if (titleEl)  titleEl.textContent = article.title || "";
   if (imgEl)   { imgEl.src = article.image || ""; imgEl.alt = article.title || ""; }
