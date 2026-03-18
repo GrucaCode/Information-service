@@ -1,97 +1,99 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const menuBtn         = document.querySelector('.topbar-btn__link--menu');
-  const menu            = document.getElementById('hamburgerMenu');
-  const closeBtn        = document.querySelector('.hamburger-menu__close-btn');
-  const hamburgerTutBtn = document.querySelector('.data-hamburger-tut');
-  const dropdownButtons = document.querySelectorAll('.drop-up-btn');
-  const borderBottom    = document.querySelectorAll('.data-dropdown');
-  const body            = document.body;
+const menuBtn = document.querySelector('.topbar-btn__link--menu');
+const menu = document.getElementById('hamburgerMenu');
+const closeBtn = document.querySelector('.hamburger-menu__close-btn');
+const hamburgerTutBtn = document.querySelector('.data-hamburger-tut');
+const dropdownButtons = document.querySelectorAll('.drop-up-btn');
+const body = document.body;
+const logoutItem = document.querySelector('.logout-item');
+const authItems = document.querySelectorAll('.data-notlogged-item');
 
-  borderBottom.forEach(border => { if (border) border.style.borderBottom = "none"; });
+const openMenu = (e) => {
+  e.preventDefault();
+  menu.classList.add('active');
+  body.classList.add('no-scroll');
+}
 
-  // Otwieranie menu
-  if (menuBtn && menu) {
-    menuBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      menu.classList.add('active');
-      body.classList.add('no-scroll');
+const closeMenu = (e) => {
+  e.preventDefault();
+  menu.classList.remove('active');
+  body.classList.remove('no-scroll');
+}
+
+const handleDropdowns = (dropdownBtn) => {
+    const clickedDropdown = dropdownBtn.closest('.dropdown');
+    const isAlreadyOpen = clickedDropdown.classList.contains('open');
+
+    const openDropdowns = document.querySelectorAll('.dropdown.open');
+    const openDropdownText = dropdownBtn.querySelector('.drop-up-btn__text');
+    const openDropdownArrow = dropdownBtn.querySelector('.drop-up-btn__arrow');
+
+    openDropdowns.forEach(dropdown => {
+      dropdown.classList.remove('open');
+      const text = dropdown.querySelector('.drop-up-btn__text');
+      const icon = dropdown.querySelector('.drop-up-btn__arrow');
+      if (text) text.textContent = 'rozwiń';
+      if (icon) icon.textContent = 'arrow_drop_down';
     });
-  }
 
-  // Zamykanie menu
-  if (closeBtn && menu) {
-    closeBtn.addEventListener('click', () => {
-      menu.classList.remove('active');
-      body.classList.remove('no-scroll');
-    });
-  }
+    if (!isAlreadyOpen) {
+      clickedDropdown.classList.add('open');
+      if (openDropdownText) openDropdownText.textContent = 'zwiń';
+      if (openDropdownArrow) openDropdownArrow.textContent = 'arrow_drop_up';
+    }
+} 
 
-  if (hamburgerTutBtn && menu) {
-    hamburgerTutBtn.addEventListener('click', () => {
-      menu.classList.remove('active');
-      body.classList.remove('no-scroll');
-    });
-  }
-
-  // Dropdowny
-  dropdownButtons.forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      const clickedDropdown = btn.closest('.dropdown');
-      if (!clickedDropdown) return;
-
-      const isAlreadyOpen = clickedDropdown.classList.contains('open');
-
-      document.querySelectorAll('.dropdown.open').forEach(dropdown => {
-        dropdown.classList.remove('open');
-        const text = dropdown.querySelector('.drop-up-btn__text');
-        const icon = dropdown.querySelector('.drop-up-btn__arrow');
-        if (text) text.textContent = 'rozwiń';
-        if (icon) icon.textContent = 'arrow_drop_down';
-      });
-
-      if (!isAlreadyOpen) {
-        clickedDropdown.classList.add('open');
-        const text = btn.querySelector('.drop-up-btn__text');
-        const icon = btn.querySelector('.drop-up-btn__arrow');
-        if (text) text.textContent = 'zwiń';
-        if (icon) icon.textContent = 'arrow_drop_up';
-      }
-
-      borderBottom.forEach(border => { if (border) border.style.borderBottom = "none"; });
-    });
-  });
-
-  updateAuthMenu();
-});
-
-async function updateAuthMenu() {
+const updateAuthMenu = async () => {
   try {
-    const res = await fetch('/api/me', { headers: { 'Accept': 'application/json' } });
-    const data = await res.json();
+    const res = await fetch('/api/me');
 
-    const logoutItem = document.querySelector('.logout-item');
-    const authItems  = document.querySelectorAll('.auth-only');
+    if (!res.ok) {
+      throw new Error('Failed to fetch auth state');
+    }
+
+    const data = await res.json();
 
     if (!logoutItem && authItems.length === 0) return;
 
     if (data.loggedIn) {
-      if (logoutItem) logoutItem.style.display = 'block';
-      authItems.forEach(el => { el.style.display = 'none'; });
+      if (logoutItem) logoutItem.classList.add('visible');
+      authItems.forEach(item => { item.classList.add('hidden'); });
     } else {
-      if (logoutItem) logoutItem.style.display = 'none';
-      authItems.forEach(el => { el.style.display = 'block'; });
-    }
-  } catch (e) {
-    console.warn('updateAuthMenu failed:', e);
+      if (logoutItem) logoutItem.classList.remove('visible');
+      authItems.forEach(item => { item.classList.remove('hidden'); });
+    };
+  } catch (err) {
+    console.warn('updateAuthMenu failed:', err);
   }
 }
 
-document.addEventListener('click', async (e) => {
+updateAuthMenu();
+
+const logout = async (e) => {
   const target = e.target.closest('#logout-btn');
   if (!target) return;
   e.preventDefault();
-  await fetch('/api/logout', { method: 'POST' });
-  location.href = 'index.html';
+
+  try {
+    const res = await fetch('/api/logout', { method: 'POST' });
+
+    if(!res.ok) {
+      throw new Error('Logout failed')
+    }
+
+    location.href = 'index.html';
+  } catch(err) {
+    console.warn('Logout failed:', err);
+  }
+};
+
+menuBtn?.addEventListener('click', openMenu);
+
+[closeBtn, hamburgerTutBtn].forEach(btn => {
+  btn?.addEventListener('click', closeMenu);
 });
+
+dropdownButtons.forEach((dropdownBtn) => {
+  dropdownBtn.addEventListener('click', () => handleDropdowns(dropdownBtn));
+});
+
+document.addEventListener('click', logout);

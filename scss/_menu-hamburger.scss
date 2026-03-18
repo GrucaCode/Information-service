@@ -43,6 +43,7 @@
             padding: 0;
             border-bottom: $color-black 2px solid;
             font-weight: 600;
+            border-bottom: none;
             .drop-up-btn {
                 display: flex;
                 align-items: center;
@@ -69,6 +70,18 @@
         }
         &__item {
             display: block;
+        }
+        .logout-item {
+            display: none;
+        }
+        .logout-item.visible {
+            display: block;
+        }
+        .data-notlogged-item {
+            display: block;
+        }
+        .data-notlogged-item.hidden {
+            display: none;
         }
     }
     .dropdown.open .dropdown-menu {

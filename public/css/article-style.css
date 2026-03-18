@@ -294,6 +294,7 @@ table {
   padding: 0;
   border-bottom: #020202 2px solid;
   font-weight: 600;
+  border-bottom: none;
 }
 .hamburger-menu .dropdown .dropdown-toggle .drop-up-btn {
   display: flex;
@@ -320,6 +321,18 @@ table {
 }
 .hamburger-menu .dropdown-menu__item {
   display: block;
+}
+.hamburger-menu .dropdown-menu .logout-item {
+  display: none;
+}
+.hamburger-menu .dropdown-menu .logout-item.visible {
+  display: block;
+}
+.hamburger-menu .dropdown-menu .data-notlogged-item {
+  display: block;
+}
+.hamburger-menu .dropdown-menu .data-notlogged-item.hidden {
+  display: none;
 }
 .hamburger-menu .dropdown.open .dropdown-menu {
   display: block;

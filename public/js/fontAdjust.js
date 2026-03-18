@@ -52,7 +52,7 @@ fontToggles.forEach((fontToggle) => {
   fontToggle.addEventListener('click', fontAdjust);
 });
 
-aPlusIcon.addEventListener('click', () => {
+aPlusIcon?.addEventListener('click', () => {
   setTimeout(updateLayout, 100);
 });
 
