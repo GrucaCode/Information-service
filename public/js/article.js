@@ -19,10 +19,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     return paras;
   };
 
-  const buildLead = (text, fallback = "") => {
-    if (!text) return fallback || "";
-    const firstTwo = text.split(/(?<=[.!?])\s+/).slice(0, 2).join(" ");
-    return firstTwo || fallback || "";
+  const buildLead = (text) => {
+    if (!text) return "";
+    const firstTwoSentences = text.split(/(?<=[.!?])\s+/).slice(0, 2).join(" ");
+    return firstTwoSentences;
   };
 
   let article = null;
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (authorEl) authorEl.textContent = article.author || "—";
   if (dateEl)   dateEl.textContent   = toPLDate(article.publish_date);
 
-  const lead = article.summary || article.description || buildLead(article.text);
+  const lead = article.summary || buildLead(article.text);
   if (sumEl) sumEl.textContent = lead;
 
   // dzielenie tekstu na akapity
