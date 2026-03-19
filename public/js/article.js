@@ -1,9 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const qs = new URLSearchParams(location.search);
-  const tmpId   = qs.get("id");        // localStorage
-  const savedId = qs.get("savedId");   // zapisane wiadomości w bazie
-
-  // const $ = (sel) => document.querySelector(sel);
+  const tmpId   = qs.get("id");    
+  const savedId = qs.get("savedId");   
 
   const toPLDate = (date) => {
     if (!date) return "—";
@@ -25,52 +23,95 @@ document.addEventListener("DOMContentLoaded", async () => {
     return firstTwoSentences;
   };
 
-  let article = null;
+  const getSavedArticle = async () => {
+    const res = await fetch(`/api/saved/${encodeURIComponent(savedId)}`);
 
-  // Pobieranie danych z artykułu 
-  try {
-    if (savedId) {
-      const r = await fetch(`/api/saved/${encodeURIComponent(savedId)}`);
-      if (r.status === 401) {
-        location.href = "profile.html?view=login";
-        return;
-      }
-      const data = await r.json();
-      if (!data.success || !data.item) throw new Error("Nie znaleziono zapisanego artykułu. Prawdopodobnie został usunięty ze strony źródłowej. Wybierz inny artykuł z listy");
-
-      const it = data.item;
-      article = {
-        title: it.title || "",
-        image: it.image || "",
-        url:   it.url   || "#",
-        text:  it.summary || "",
-        publish_date: it.publishedAt || null,
-        author: it.author || ""
-      };
-    } else if (tmpId) {
-      const raw = localStorage.getItem(`article-${tmpId}`);
-      if (!raw) throw new Error("Artykuł wygasł lub nie istnieje.");
-      article = JSON.parse(raw);
-      article = {
-        title: article.title || "",
-        image: article.image || article.urlToImage || "",
-        url:   article.url   || "#",
-        text:  article.text  || article.content || article.description || "",
-        publish_date: article.publish_date || article.publishedAt || null,
-        author: article.author || ""
-      };
-    } else {
-      throw new Error("Brak identyfikatora artykułu w URL.");
+    if (res.status === 401) {
+      location.href = "profile.html?view=login";
+      throw new Error("Unauthorised access");
     }
-  } catch (err) {
-    console.error(err);
-    document.body.innerHTML = `
-      <main class="news"><div class="news__content">
-        <p>${err.message}</p>
-        <p><a href="index.html">← Wróć na stronę główną</a></p>
-      </div></main>`;
-    return;
+
+    const data = await res.json();
+    if (!data.success || !data.item) {
+      throw new Error("Invalid response data");
+    }
+
+    const dataItem = data.item;
+
+    return {
+      title: dataItem.title || "",
+      image: dataItem.image || "",
+      text: dataItem.summary || "",
+      publish_date: dataItem.publishedAt || null,
+      author: dataItem.author || ""
+    }
+  } 
+
+  const getLocalArticle = () => {
+    const rawData = localStorage.getItem(`article-${tmpId}`);
+
+    if (!rawData) {
+      throw new Error('Failed to get local article data');
+    }
+
+    const article = JSON.parse(rawData);
+
+    return {
+      title: article.title || "",
+      image: article.image || article.urlToImage || "",
+      url: article.url || "#",
+      text: article.text || article.content || article.description || "",
+      publish_date: article.publish_date || article.publishedAt || null,
+      author: article.author || ""
+    }
   }
+
+  // // Pobieranie danych z artykułu 
+  // try {
+  //   if (savedId) {
+  //     const res = await fetch(`/api/saved/${encodeURIComponent(savedId)}`);
+  //     if (res.status === 401) {
+  //       location.href = "profile.html?view=login";
+  //       return;
+  //     }
+  //     const data = await res.json();
+  //     if (!data.success || !data.item) throw new Error("Invalid response data");
+
+  //     console.log(data.item);
+
+  //     const it = data.item;
+  //     article = {
+  //       title: it.title || "",
+  //       image: it.image || "",
+  //       url:   it.url   || "#",
+  //       text:  it.summary || "",
+  //       publish_date: it.publishedAt || null,
+  //       author: it.author || ""
+  //     };
+  //   } else if (tmpId) {
+  //     const raw = localStorage.getItem(`article-${tmpId}`);
+  //     if (!raw) throw new Error("Artykuł wygasł lub nie istnieje.");
+  //     article = JSON.parse(raw);
+  //     article = {
+  //       title: article.title || "",
+  //       image: article.image || article.urlToImage || "",
+  //       url:   article.url   || "#",
+  //       text:  article.text  || article.content || article.description || "",
+  //       publish_date: article.publish_date || article.publishedAt || null,
+  //       author: article.author || ""
+  //     };
+  //   } else {
+  //     throw new Error("Brak identyfikatora artykułu w URL.");
+  //   }
+  // } catch (err) {
+  //   console.error(err);
+  //   document.body.innerHTML = `
+  //     <main class="news"><div class="news__content">
+  //       <p>${err.message}</p>
+  //       <p><a href="index.html">← Wróć na stronę główną</a></p>
+  //     </div></main>`;
+  //   return;
+  // }
 
   const titleEl = document.querySelector(".data-news-title");
   const imgEl = document.querySelector(".data-news-image");
@@ -78,30 +119,70 @@ document.addEventListener("DOMContentLoaded", async () => {
   const sumEl = document.querySelector(".data-news-sum");
   const authorEl = document.querySelector(".data-news-author");
   const dateEl = document.querySelector(".data-publish-date");
-  const fullBtn = document.querySelector(".btn-full");
-  const saveBtn = document.querySelector("#save-article-btn");
+  const newsSourceBtn = document.querySelector(".data-source-btn");
+  const saveBtn = document.querySelector(".data-save-btn");
 
-  if (titleEl)  titleEl.textContent = article.title || "";
-  if (imgEl)   { imgEl.src = article.image || ""; imgEl.alt = article.title || ""; }
-  if (authorEl) authorEl.textContent = article.author || "—";
-  if (dateEl)   dateEl.textContent   = toPLDate(article.publish_date);
+  // if (titleEl)  titleEl.textContent = article.title || "";
+  // if (imgEl)   { imgEl.src = article.image || ""; imgEl.alt = article.title || ""; }
+  // if (authorEl) authorEl.textContent = article.author || "—";
+  // if (dateEl)   dateEl.textContent   = toPLDate(article.publish_date);
 
-  const lead = article.summary || buildLead(article.text);
-  if (sumEl) sumEl.textContent = lead;
+  // const lead = article.summary || buildLead(article.text);
+  // if (sumEl) sumEl.textContent = lead;
 
-  // dzielenie tekstu na akapity
-  if (textEl) {
+  // // dzielenie tekstu na akapity
+  // if (textEl) {
+  //   const paras = splitIntoParagraphs(article.text, 5);
+  //   textEl.innerHTML = paras.map(p => `<p>${p}</p>`).join("");
+  // }
+
+  const renderArticle = (article) => {
+    titleEl.textContent = article.title;
+    imgEl.src = article.image;
+    authorEl.textContent = article.author || "—";
+    dateEl.textContent = toPLDate(article.publish_date);
+
+    const lead = buildLead(article.text);
+    sumEl.textContent = lead;
+
     const paras = splitIntoParagraphs(article.text, 5);
     textEl.innerHTML = paras.map(p => `<p>${p}</p>`).join("");
   }
 
-  if (fullBtn) fullBtn.href = article.url || "#";
-
-  // Przycisk zapisz wiadomość
-  if (savedId && saveBtn) {
-    saveBtn.setAttribute("disabled", "true");
-    saveBtn.style.backgroundColor = " #616161";
+  const handleArticleBtns = (article) => {
+    if (newsSourceBtn) newsSourceBtn.href = article.url || "#";
+    if (savedId && saveBtn) {
+      saveBtn.setAttribute("disabled", "true");
+      // saveBtn.style.backgroundColor = " #616161";
+      saveBtn.classList.add("deactivated");
+    }
   }
+
+  let article = null;
+
+  try {
+
+    if (savedId) {
+      article = await getSavedArticle();
+    } else if (tmpId) {
+      article = getLocalArticle();
+    } else {
+      throw new Error ("Failed to get any articles");
+    }
+
+    renderArticle(article);
+    handleArticleBtns(article);
+
+  } catch (err) {
+    console.error(err);
+
+    document.body.innerHTML = `
+      <main class="news"><div class="news__content">
+        <p>${err.message}</p>
+        <p><a href="index.html">← Wróć na stronę główną</a></p>
+      </div></main>`;
+  }
+
 
   // Zapisywanie artykułu do profilu
   if (!savedId && saveBtn) {
