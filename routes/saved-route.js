@@ -12,7 +12,7 @@ function requireAuth(req, res, next) {
 // zapisywanie artykułu
 router.post('/', requireAuth, async (req, res) => {
   try {
-    const { title, url, image, summary, publishedAt } = req.body;
+    const { title, url, image, summary, publishedAt, author } = req.body;
     if (!title || !url) return res.status(400).json({ success:false, message:'Brak wymaganych pól' });
 
     const existing = await SavedArticle.findOne({ where: { userId: req.session.user.id, url } });
@@ -20,9 +20,12 @@ router.post('/', requireAuth, async (req, res) => {
 
     const saved = await SavedArticle.create({
       userId: req.session.user.id,
-      title, url, image: image || null,
+      title,
+      url, 
+      image: image || null,
       summary: summary || null,
-      publishedAt: publishedAt ? new Date(publishedAt) : null
+      publishedAt: publishedAt ? new Date(publishedAt) : null,
+      author: author
     });
 
     res.status(201).json({ success:true, item: saved });

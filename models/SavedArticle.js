@@ -7,7 +7,8 @@ const SavedArticle = sequelize.define('SavedArticle', {
   url:         { type: DataTypes.STRING, allowNull: false },
   image:       { type: DataTypes.STRING },
   summary:     { type: DataTypes.TEXT },
-  publishedAt: { type: DataTypes.DATE }
+  publishedAt: { type: DataTypes.DATE },
+  author:      { type: DataTypes.STRING }
 });
 
 User.hasMany(SavedArticle, { foreignKey: 'userId', onDelete: 'CASCADE' });
