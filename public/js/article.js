@@ -3,6 +3,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   const tmpId   = qs.get("id");    
   const savedId = qs.get("savedId");   
 
+  const titleEl = document.querySelector(".data-news-title");
+  const imgEl = document.querySelector(".data-news-image");
+  const textEl = document.querySelector(".data-news-text");
+  const sumEl = document.querySelector(".data-news-sum");
+  const authorEl = document.querySelector(".data-news-author");
+  const dateEl = document.querySelector(".data-publish-date");
+  const newsSourceBtn = document.querySelector(".data-source-btn");
+  const saveBtn = document.querySelector(".data-save-btn");
+
   const toPLDate = (date) => {
     if (!date) return "—";
     const dataObj = new Date(date);
@@ -13,7 +22,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!text) return [];
     const sentences = text.split(/(?<=[.!?])\s+/);
     const paras = [];
-    while (sentences.length) paras.push(sentences.splice(0, maxSentencesPerPara).join(" "));
+
+    for (let i = 0; i < sentences.length; i += maxSentencesPerPara) {
+      paras.push(sentences.slice(i, i + maxSentencesPerPara).join(" "));
+    }
+
     return paras;
   };
 
@@ -64,77 +77,49 @@ document.addEventListener("DOMContentLoaded", async () => {
     return articleDataToObject(article)
   }
 
-  const titleEl = document.querySelector(".data-news-title");
-  const imgEl = document.querySelector(".data-news-image");
-  const textEl = document.querySelector(".data-news-text");
-  const sumEl = document.querySelector(".data-news-sum");
-  const authorEl = document.querySelector(".data-news-author");
-  const dateEl = document.querySelector(".data-publish-date");
-  const newsSourceBtn = document.querySelector(".data-source-btn");
-  const saveBtn = document.querySelector(".data-save-btn");
+  let article = null;
 
   const renderArticle = (article) => {
-    titleEl.textContent = article.title;
-    imgEl.src = article.image;
-    authorEl.textContent = article.author;
-    dateEl.textContent = toPLDate(article.publishedAt);
+    console.log(article);
+
+    if (titleEl) titleEl.textContent = article.title;
+    if (imgEl) imgEl.src = article.image;
+    if (authorEl) authorEl.textContent = article.author;
+    if (dateEl) dateEl.textContent = toPLDate(article.publishedAt);
 
     const lead = buildLead(article.summary);
-    sumEl.textContent = lead;
+    if (sumEl) sumEl.textContent = lead;
 
     const paras = splitIntoParagraphs(article.summary, 5);
-    textEl.innerHTML = paras.map(p => `<p>${p}</p>`).join("");
+    if (textEl) textEl.innerHTML = paras.map(p => `<p>${p}</p>`).join("");
   }
 
-  const handleArticleBtns = (article) => {
-    if (newsSourceBtn) newsSourceBtn.href = article.url || "#";
-    if (savedId && saveBtn) {
-      saveBtn.setAttribute("disabled", "true");
+  const disableSaveBtn = () => {
+    if (saveBtn) {
+      saveBtn.disabled = true;
       saveBtn.classList.add("deactivated");
     }
   }
 
-  let article = null;
-
-  try {
-
-    if (savedId) {
-      article = await getSavedArticle();
-    } else if (tmpId) {
-      article = getLocalArticle();
-    } else {
-      throw new Error ("Failed to get any articles");
-    }
-
-    renderArticle(article);
-    handleArticleBtns(article);   
-
-  } catch (err) {
-    console.error(err);
-
-    document.body.innerHTML = `
-      <main class="news"><div class="news__content">
-        <p>${err.message}</p>
-        <p><a href="index.html">← Wróć na stronę główną</a></p>
-      </div></main>`;
+  const setSourceLink = (article) => {
+    if (newsSourceBtn) newsSourceBtn.href = article.url || "#";
   }
 
-
   const saveArticle = async (article) => {
-    saveBtn.disabled = true;
+    disableSaveBtn();
     try {
-      const payload = articleDataToObject(article);
-
       const res = await fetch("/api/saved", {
         method: "POST",
         headers: { "Content-Type":"application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(article)
       });
 
       if (res.status === 401) {
         alert("Zaloguj się, aby zapisać artykuł.");
         location.href = "profile.html?view=login";
         return;
+      } else if (!res.ok) {
+        throw new Error(`Request failed: ${res.status}`)
       }
 
       const data = await res.json();
@@ -147,10 +132,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (err) {
       console.error(err);
       alert("Błąd zapisu.");
-        
-    } finally {
-      saveBtn.disabled = false;
+    } finally { 
+      saveBtn.disabled = false 
     }
+  }
+
+  try {
+    if (savedId) {
+      article = await getSavedArticle();
+      disableSaveBtn();
+    } else if (tmpId) {
+      article = getLocalArticle();
+    } else {
+      throw new Error ("Failed to get any articles");
+    }
+
+    renderArticle(article);
+    setSourceLink(article);  
+     
+  } catch (err) {
+    console.error(err);
+
+    document.body.innerHTML = `
+      <main class="news"><div class="news__content">
+        <p>${err.message}</p>
+        <p><a href="index.html">← Wróć na stronę główną</a></p>
+      </div></main>`;
   }
 
   if (!savedId && saveBtn) {
