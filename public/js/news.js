@@ -23,6 +23,9 @@ const goToArticle = (article, index) => {
   };
   localStorage.setItem(`article-${index}`, JSON.stringify(articleData));
   window.location.href = `article.html?id=${index}`;
+
+  // if (!article?.id) return;
+  // window.location.href = `article.html?id=${encodeURIComponent(article.id)}`;
 };
 
 const createSlide = (article, index) => {
