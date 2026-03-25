@@ -11,21 +11,21 @@ const createDot = (index) => {
   return dot;
 };
 
-const goToArticle = (article, index) => {
-  const articleData = {
-    title: article.title,
-    author: article.author,
-    publish_date: article.publish_date,
-    summary: article.summary,
-    image: article.image,
-    text: article.text,
-    url: article.url
-  };
-  localStorage.setItem(`article-${index}`, JSON.stringify(articleData));
-  window.location.href = `article.html?id=${index}`;
+const goToArticle = (article) => {
+  // const articleData = {
+  //   title: article.title,
+  //   author: article.author,
+  //   publish_date: article.publish_date,
+  //   summary: article.summary,
+  //   image: article.image,
+  //   text: article.text,
+  //   url: article.url
+  // };
+  // localStorage.setItem(`article-${index}`, JSON.stringify(articleData));
+  // window.location.href = `article.html?id=${index}`;
 
-  // if (!article?.id) return;
-  // window.location.href = `article.html?id=${encodeURIComponent(article.id)}`;
+  if (!article?.id) return;
+  window.location.href = `article.html?id=${encodeURIComponent(article.id)}`;
 };
 
 const createSlide = (article, index) => {
@@ -69,15 +69,17 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(data => {
       const articles = data.news;
       const articlesLen = data.number;
+      
       if (!articles || !articlesLen) return;
 
       articles.forEach((article, index) => {
         const slide = createSlide(article, index);
+
         slidesContainer.appendChild(slide);
 
         const readMoreBtn = slide.querySelector('.btn-read-more');
 
-        readMoreBtn.addEventListener('click', () => goToArticle(article, index));
+        readMoreBtn.addEventListener('click', () => goToArticle(article));
         
         dotsContainer.appendChild(createDot(index));
       });

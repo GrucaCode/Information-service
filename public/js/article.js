@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const qs = new URLSearchParams(location.search);
-  const tmpId   = qs.get("id");    
+  const newsId = qs.get("id");    
   const savedId = qs.get("savedId");   
 
   const titleEl = document.querySelector(".data-news-title");
@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const toPLDate = (date) => {
     if (!date) return "—";
-    const dataObj = new Date(date);
-    return dataObj.toLocaleDateString("pl-PL");
+    const dateObj = new Date(date);
+    return dateObj.toLocaleDateString("pl-PL");
   }
 
   const splitIntoParagraphs = (text, maxSentencesPerPara = 4) => {
@@ -30,22 +30,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     return paras;
   };
 
-  const buildLead = (text) => {
-    if (!text) return "";
-    const firstTwoSentences = text.split(/(?<=[.!?])\s+/).slice(0, 2).join(" ");
-    return firstTwoSentences;
-  };
-
   const articleDataToObject = (articleData) => {
     return {
+      id: articleData.id || null,
       title: articleData.title || "",
       image: articleData.image || articleData.urlToImage || "",
       url: articleData.url || "#",
-      summary: articleData.text || articleData.summary || "",
+      summary: articleData.summary || "",
+      text: articleData.text || "",
       publishedAt: articleData.publish_date || articleData.publishedAt || null,
-      author: articleData.author || ""
-    }
-  }
+      author: Array.isArray(articleData.authors)
+        ? articleData.authors.join(", ")
+        : (articleData.author || "")
+    };
+  };
 
   const getSavedArticle = async () => {
     const res = await fetch(`/api/saved/${encodeURIComponent(savedId)}`);
@@ -65,33 +63,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     return articleDataToObject(dataItem)
   } 
 
-  const getLocalArticle = () => {
-    const rawData = localStorage.getItem(`article-${tmpId}`);
+  const getArticle = async () => {
+    const res = await fetch(`/api/news/retrieve?ids=${encodeURIComponent(newsId)}`);
+    const data = await res.json();
 
-    if (!rawData) {
-      throw new Error('Failed to get local article data');
+    if (!res.ok || !data.success || !data.news?.length) {
+      throw new Error("Nie udało się pobrać artykułu z API");
     }
 
-    const article = JSON.parse(rawData);
-
-    return articleDataToObject(article)
+    return articleDataToObject(data.news[0]);
   }
 
   let article = null;
 
   const renderArticle = (article) => {
-    console.log(article);
-
     if (titleEl) titleEl.textContent = article.title;
-    if (imgEl) imgEl.src = article.image;
+    if (imgEl) imgEl.setAttribute("src", `${article.image}`);
     if (authorEl) authorEl.textContent = article.author;
     if (dateEl) dateEl.textContent = toPLDate(article.publishedAt);
+    if (sumEl) sumEl.textContent = article.summary;
 
-    const lead = buildLead(article.summary);
-    if (sumEl) sumEl.textContent = lead;
-
-    const paras = splitIntoParagraphs(article.summary, 5);
+    const paras = splitIntoParagraphs(article.text, 5);
     if (textEl) textEl.innerHTML = paras.map(p => `<p>${p}</p>`).join("");
+
+    if (newsSourceBtn) newsSourceBtn.href = article.url || "#";
   }
 
   const disableSaveBtn = () => {
@@ -99,10 +94,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       saveBtn.disabled = true;
       saveBtn.classList.add("deactivated");
     }
-  }
-
-  const setSourceLink = (article) => {
-    if (newsSourceBtn) newsSourceBtn.href = article.url || "#";
   }
 
   const saveArticle = async (article) => {
@@ -141,14 +132,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (savedId) {
       article = await getSavedArticle();
       disableSaveBtn();
-    } else if (tmpId) {
-      article = getLocalArticle();
+    } else if (newsId) {
+      article = await getArticle();
     } else {
       throw new Error ("Failed to get any articles");
     }
 
     renderArticle(article);
-    setSourceLink(article);  
      
   } catch (err) {
     console.error(err);
