@@ -58,7 +58,7 @@ const updateAuthMenu = async () => {
       if (logoutItem) logoutItem.classList.add('visible');
       authItems.forEach(item => { item.classList.add('hidden'); });
     } else {
-      if (logoutItem) logoutItem.classList.remove('visible');
+      if (!logoutItem) logoutItem.classList.remove('visible');
       authItems.forEach(item => { item.classList.remove('hidden'); });
     };
   } catch (err) {

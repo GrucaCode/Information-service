@@ -12,67 +12,110 @@ function requireAuth(req, res, next) {
 // zapisywanie artykułu
 router.post('/', requireAuth, async (req, res) => {
   try {
-    const { title, url, image, summary, publishedAt } = req.body;
-    if (!title || !url) return res.status(400).json({ success:false, message:'Brak wymaganych pól' });
+    const { id: newsId } = req.body;
+    if (!newsId) return res.status(400).json({ success:false, message:'There is no article id' });
 
-    const existing = await SavedArticle.findOne({ where: { userId: req.session.user.id, url } });
-    if (existing) return res.status(200).json({ success:true, message:'Artykuł został już zapisany wcześniej' });
+    const existing = await SavedArticle.findOne({ 
+      where: { 
+        userId: req.session.user.id,
+        newsId
+      } 
+    });
+
+    if (existing) {
+      return res.status(200).json({
+        success:true,
+        message:'Artykuł został już zapisany wcześniej' 
+      });
+    }
 
     const saved = await SavedArticle.create({
       userId: req.session.user.id,
-      title, url, image: image || null,
-      summary: summary || null,
-      publishedAt: publishedAt ? new Date(publishedAt) : null
+      newsId
+      // title,
+      // url, 
+      // image: image || null,
+      // summary: summary || null,
+      // text: text || null,
+      // publishedAt: publishedAt ? new Date(publishedAt) : null,
+      // author: author
     });
 
-    res.status(201).json({ success:true, item: saved });
+    res.status(201).json({
+      success:true,
+      item: saved 
+    });
+
   } catch (e) {
     console.error(e);
-    res.status(500).json({ success:false, message:'Błąd zapisu' });
+    res.status(500).json({
+      success:false,
+      message:'Błąd zapisu'
+    });
   }
-});
+});   
 
 router.get('/', requireAuth, async (req, res) => {
   try {
     const sort = (req.query.sort || 'newest');
     const order = sort === 'oldest' ? 'ASC' : 'DESC';
-    const items = await SavedArticle.findAll({
+    const ids = await SavedArticle.findAll({
       where: { userId: req.session.user.id },
       order: [['createdAt', order]]
     });
-    res.json({ success:true, items });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ success:false, message:'Błąd pobierania listy' });
+
+    res.json({ success:true, ids });
+  } catch (err) {
+    console.error(err);
+    
+    res.status(500).json({ 
+      success:false,
+      message:'Błąd pobierania listy'
+    });
   }
 });
 
 // pobranie jednego zapisu
-router.get('/:id', requireAuth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const item = await SavedArticle.findOne({
-      where: { id, userId: req.session.user.id }
-    });
-    if (!item) return res.status(404).json({ success: false, message: 'Nie znaleziono artykułu. Możliwe, że został usunięty ze strony źródłowej. Najlepiej usunąć go z listy zapisanych wiadomości' });
-    res.json({ success: true, item });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ success: false, message: 'Błąd pobierania zapisu' });
-  }
-});
+// router.get('/:id', requireAuth, async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const item = await SavedArticle.findOne({
+//       where: { id, userId: req.session.user.id }
+//     });
+//     if (!item) return res.status(404).json({ success: false, message: 'Nie znaleziono artykułu. Możliwe, że został usunięty ze strony źródłowej. Najlepiej usunąć go z listy zapisanych wiadomości' });
+//     res.json({ success: true, item });
+//   } catch (e) {
+//     console.error(e);
+//     res.status(500).json({ success: false, message: 'Błąd pobierania zapisu' });
+//   }
+// });
 
-router.delete('/:id', requireAuth, async (req, res) => {
+router.delete('/:newsId', requireAuth, async (req, res) => {
   try {
-    const { id } = req.params;
+    const { newsId } = req.params;
+
     const rows = await SavedArticle.destroy({
-      where: { id, userId: req.session.user.id }
+      where: {
+        newsId, 
+        userId: req.session.user.id
+      }
     });
-    if (!rows) return res.status(404).json({ success:false, message:'Nie znaleziono artykułu' });
+
+    if (!rows) {
+      return res.status(404).json({ 
+        success:false,
+        message:'Article has not been found'
+      });
+    } 
     res.json({ success:true });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ success:false, message:'Błąd usuwania artykułu' });
+
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({ 
+      success:false, 
+      message:'Failed to delete article'
+    });
   }
 });
 

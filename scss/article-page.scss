@@ -89,7 +89,7 @@ a {
             font-size: 30px;
             color: $color-dark-green;
         }
-        .btn-full {
+        &__btn {
             display: block;
             text-decoration: underline;
             font-size: .875rem;
@@ -120,4 +120,8 @@ a {
         border: $color-white 1px solid;
         padding: 13px 18px;
     }
+}
+
+.save-btn.deactivated {
+    background-color: $color-saved;
 }

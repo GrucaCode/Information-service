@@ -1,4 +1,7 @@
-document.addEventListener("DOMContentLoaded", () => {
+import { toPLDate } from "./utils.js";
+import { goToArticle } from "./utils.js";
+
+document.addEventListener("DOMContentLoaded", async () => {
   const loginSection = document.getElementById("login-section");
   const registerSection = document.getElementById("register-section");
   const userSection = document.getElementById("user-section");
@@ -35,6 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const params = new URLSearchParams(window.location.search);
   const view = params.get("view")
+
+  const savedList = document.getElementById("saved-list");
+  const sortSelect = document.getElementById("sort");
 
   if (view === "login") {
     loginSection.style.display = "block";
@@ -118,37 +124,68 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Zapisywanie wiadomości 
-  async function loadSaved(sort = 'newest') {
-  const list = document.getElementById('saved-list');
-  if (!list) return;
-  list.innerHTML = '<p>Ładowanie…</p>';
+  async function getSavedArticlesIds(sort = 'newest') {
+    try {
+      const r = await fetch(`/api/saved?sort=${encodeURIComponent(sort)}`);
+      if (r.status === 401) {
+        return [];
+      }
+      const data = await r.json();
+      const ids = data.ids.map(item => item.newsId) || [];
+     
+      return ids;
 
-  try {
-    const r = await fetch(`/api/saved?sort=${encodeURIComponent(sort)}`);
-    if (r.status === 401) {
-      list.innerHTML = '<p>Zaloguj się, aby skorzystać z funkcji zapisywania wiadomości.</p>';
+    } catch(err) {
+      console.error(err);
+      return [];
+    }
+  }
+
+  const retriveArticlesfromIds = async (ids) => {
+    if (!Array.isArray(ids) || !ids.length) {
+      return [];
+    }
+
+    const idsParam = ids.join(",");
+    const res = await fetch(`/api/news/retrieve?ids=${encodeURIComponent(idsParam)}`);
+    const data = await res.json();
+
+    if (!res.ok || !data.success || !data.news?.length) {
+      throw new Error("Nie udało się pobrać artykułu z API");
+    }
+
+    return data.news;
+  }
+
+  const renderEmptyState = () => {
+    if (savedList) {
+      savedList.innerHTML = `
+        <div class="no-saved">
+          <p class="no-saved__text">Brak zapisanych wiadomości, aby zapisać wiadomość przejdź do strony artykułu i kliknij w przycisk Zapisz w profilu</p>
+          <img src="img/Empty_graphics.svg" alt="Grafika informująca o braku zapisanych wiadomości" class="no-saved__img">
+        </div>`;
+    }
+  }
+
+  const renderSavedArticles = (news) => {
+    if (!news.length) {
+      renderEmptyState();
       return;
     }
-    const data = await r.json();
-    const items = data.items || [];
-    if (!items.length) {
-      list.innerHTML = '<div class="no-saved"><p class="no-saved__text">Brak zapisanych wiadomości, aby zapisać wiadomość przejdź do strony artykułu i kliknij w przycisk Zapisz w profilu</p><img src="img/Empty_graphics.svg" alt="Grafika informująca o braku zapisanych wiadomości" class="no-saved__img"></div>';
-      return;
-    }
 
-    // Umieszczenie zapisanych wiadomości w profilu
-    list.innerHTML = items.map(item => {
-      const date = item.publishedAt ? new Date(item.publishedAt).toLocaleDateString('pl-PL') : '';
+    if (savedList) {
+      savedList.innerHTML = news.map(item => {
+      const date = toPLDate(item.publish_date);
+
       return `
         <div class="saved-sec__wrapper saved" data-id="${item.id}">
           <div class="saved__img-container">
-            ${item.image ? `<img src="${item.image}" alt="" class="saved-sec__img">` : ''}
+            ${item.image ? `<img src="${item.image}" alt="" class="saved-sec__img">` : ""}
           </div>
           <div class="saved__content">
             <h3 class="saved__title">${item.title}</h3>
-            <button class="btn-read-more saved__btn" data-url="${item.url}">
-              <div class="btn-read-more__frame">Czytaj</div>
+            <button class="btn-read-more saved__read-btn" data-url="${item.url}">
+              <div class="saved__btn-frame">Czytaj</div>
             </button>
             <img src="img/Menu line.svg" alt="" class="saved__decor-line">
             <div class="saved__info">
@@ -156,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <p class="saved__date">${date}</p>
             </div>
           </div>
-          <button class="delete-btn" data-del="${item.id}">
+          <button class="delete-btn" data-id="${item.id}">
             <div class="delete-btn__frame">
               <i class="material-icons-outlined delete-btn__icon">delete</i>
               <p class="delete-btn__text">Usuń</p>
@@ -164,61 +201,73 @@ document.addEventListener("DOMContentLoaded", () => {
           </button>
         </div>
       `;
-    }).join('');
+      }).join("");
+    }
 
-    // Otwieranie zapisanego artykłu
-    list.querySelectorAll('.saved__btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const wrap = btn.closest('[data-id]');
-        const savedId = wrap?.getAttribute('data-id');
-        if (savedId) {
-          window.location.href = `article.html?savedId=${encodeURIComponent(savedId)}`;
-        }
-      });
-    });
-
-    // Usuwanie zapisanych wiadomości
-    list.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const id = btn.getAttribute('data-del');
-        if (!confirm('Usunąć zapis?')) return;
-        const rr = await fetch(`/api/saved/${id}`, { method: 'DELETE' });
-        const dj = await rr.json();
-        if (dj.success) {
-          const wrap = list.querySelector(`[data-id="${id}"]`);
-          wrap?.remove();
-          if (!list.children.length) {
-            list.innerHTML = '<div class="no-saved"><p class="no-saved__text">Brak zapisanych wiadomości, aby zapisać wiadomość przejdź do strony artykułu i kliknij w przycisk Zapisz w profilu</p><img src="img/Empty_graphics.svg" alt="Grafika informująca o braku zapisanych wiadomości" class="no-saved__img"></div>';
-          }
-
-        } else {
-          alert(dj.message || 'Nie udało się usunąć wiadomości. Błąd jest po stronie aplikacji, zgłoś do nas ten incydent, a my postaramy się jak najszybciej go rozwiązać');
-        }
-      });
-    });
-
-  } catch (e) {
-    console.error(e);
-    list.innerHTML = '<p>Nie udało się pobrać zapisów. Błąd po stronie aplikacji</p>';
   }
-}
 
-// Sortowanie zapisanych wiadomości
-const sortSelect = document.getElementById('sort');
-if (sortSelect) {
-  sortSelect.addEventListener('change', () => {
-    loadSaved(sortSelect.value);
+  const loadSavedArticles = async (sort = "newest") => {
+    const ids = await getSavedArticlesIds(sort);
+    const savedArticles = await retriveArticlesfromIds(ids);
+    renderSavedArticles(savedArticles);
+  }  
+
+  const deleteSavedArticle = async (newsId, card) => {
+    try {
+      const response = await fetch(`/api/saved/${newsId}`, { method: 'DELETE' });
+      const data = await response.json();
+
+      if (!data.success) {
+        alert("Nie udało się usunąć wiadomości.");
+        return;
+      }
+
+      card?.remove();
+
+      if (savedList && !savedList.children.length) {
+        renderEmptyState();
+      }
+
+    } catch(err) {
+      console.error(err);
+      alert('Nie udało się usunąć wiadomości. Błąd jest po stronie aplikacji, zgłoś do nas ten incydent, a my postaramy się jak najszybciej go rozwiązać');
+    }
+  }
+
+  sortSelect?.addEventListener('change', () => {
+    loadSavedArticles(sortSelect.value);
   });
-}
 
-fetch('/api/me')
-  .then(r => r.json())
-  .then(d => {
-    if (d.loggedIn) {
+  savedList?.addEventListener("click", async (e) => {
+    const readButton = e.target.closest(".saved__read-btn");
+    const deleteBtn = e.target.closest(".delete-btn");
+    const card = e.target.closest(".saved");
 
-      loadSaved('newest');
+    if (!card) return;
+    const articleId = card.dataset.id;
+
+    if (readButton) {
+      goToArticle({id: articleId})
+    }
+
+    if (deleteBtn) {
+      await deleteSavedArticle(articleId, card)
     }
   });
+
+
+  try {
+    const meRes = await fetch("/api/me");
+    const meData = await meRes.json();
+
+    if (meData.loggedIn) {
+      await loadSavedArticles("newest");
+    }
+  } catch (err) {
+    console.error("Failed to check if user is logged in", err);
+  }
+
+
 
   // Wylogowanie użytkownika
   const logoutBtn = document.getElementById("logout-btn");
