@@ -598,7 +598,7 @@ a {
   font-size: 30px;
   color: #005F67;
 }
-.news .news-source .btn-full {
+.news .news-source__btn {
   display: block;
   text-decoration: underline;
   font-size: 0.875rem;
@@ -626,6 +626,10 @@ a {
   gap: 10px;
   border: #fff 1px solid;
   padding: 13px 18px;
+}
+
+.save-btn.deactivated {
+  background-color: #616161;
 }
 
 /*# sourceMappingURL=article-style.css.map */

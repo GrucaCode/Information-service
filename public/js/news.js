@@ -1,3 +1,5 @@
+import { goToArticle } from "./utils.js";
+
 const slidesContainer = document.querySelector('.slider__slides');
 const dotsContainer = document.querySelector('.slider__dots');
 const nextArrow = document.querySelector('.slider-nav__arrow--next');
@@ -9,20 +11,6 @@ const createDot = (index) => {
   dot.textContent = index === 0 ? 'radio_button_checked' : 'brightness_1';
   dot.dataset.index = index;
   return dot;
-};
-
-const goToArticle = (article, index) => {
-  const articleData = {
-    title: article.title,
-    author: article.author,
-    publish_date: article.publish_date,
-    summary: article.summary,
-    image: article.image,
-    text: article.text,
-    url: article.url
-  };
-  localStorage.setItem(`article-${index}`, JSON.stringify(articleData));
-  window.location.href = `article.html?id=${index}`;
 };
 
 const createSlide = (article, index) => {
@@ -66,15 +54,17 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(data => {
       const articles = data.news;
       const articlesLen = data.number;
+      
       if (!articles || !articlesLen) return;
 
       articles.forEach((article, index) => {
         const slide = createSlide(article, index);
+
         slidesContainer.appendChild(slide);
 
         const readMoreBtn = slide.querySelector('.btn-read-more');
 
-        readMoreBtn.addEventListener('click', () => goToArticle(article, index));
+        readMoreBtn.addEventListener('click', () => goToArticle(article));
         
         dotsContainer.appendChild(createDot(index));
       });

@@ -3,17 +3,90 @@ import fetch from 'node-fetch';
 import { apiKey } from './secret.js';
 const router = express.Router();
 
+const WORLDNEWS_BASE = 'https://api.worldnewsapi.com';
+
 router.get('/', async (req, res) => {
-  const url = `https://api.worldnewsapi.com/search-news?source-country=pl&language=pl&categories=politics,sports,business&sort=publish-time&sort-direction=DESC&number=5&api-key=${apiKey}`;
+
+  const params = new URLSearchParams ({
+    'source-country': 'pl',
+    'language': 'pl',
+    'categories': 'politics,sports,business',
+    'sort': 'publish-time',
+    'sort-direction': 'DESC',
+    'number': '5',
+    'api-key': apiKey,
+  });
+
+  const url = `${WORLDNEWS_BASE}/search-news?${params.toString()}`;
 
   try {
     const response = await fetch(url);
     const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    console.error('Błąd API:', error);
-    res.status(500).json({ error: 'Nie udało się pobrać wiadomości' });
+
+    if (!response.ok) {
+      return res.status(response.status).json({
+        success: false,
+        message: data?.message || 'Failed to fetch news from API'
+      })
+    }
+
+    res.json({
+      success: true,
+      news: data.news,
+      number: data.number
+    });
+
+  } catch (err) {
+    console.error('Błąd API:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to get news' 
+    });
   }
+
+});
+
+router.get('/retrieve', async (req, res) => {
+  const ids = (req.query.ids).trim() || '';
+
+  if (!ids.length) {
+    return res.status(400).json ({
+      success: false,
+      message: 'Lack of ids parameter'
+    });
+  }
+
+  const params = new URLSearchParams({
+    ids,
+    'api-key': apiKey
+  });
+
+  const url = `${WORLDNEWS_BASE}/retrieve-news?${params.toString()}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json ({
+        success: false,
+        message: data?.message || 'Failed to fetch articles with the given ids'
+      });
+    }
+
+    res.json ({
+      success: true,
+      news: data.news || []
+    });
+
+  } catch (err) {
+    console.error('Retreive news API error', err)
+    res.status(500).json ({
+      success: false,
+      message: 'Failed to retreive articles'
+    });
+  }
+
 });
 
 router.get('/search', async (req, res) => {
@@ -33,15 +106,23 @@ router.get('/search', async (req, res) => {
 
   if (categories) params.set('categories', categories);
 
-  const url = `https://api.worldnewsapi.com/search-news?${params.toString()}`;
+  const url = `${WORLDNEWS_BASE}/search-news?${params.toString()}`;
 
   try {
-    const r = await fetch(url);
-    const data = await r.json();
-    res.json({ success: true, ...data });
-  } catch (e) {
-    console.error('Search API error:', e);
-    res.status(500).json({ success: false, message: 'Nie udało się pobrać wyników' });
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    res.json({
+      success: true,
+      ...data 
+    });
+
+  } catch (err) {
+    console.error('Search API error:', err);
+    res.status(500).json({
+      success: false, 
+      message: 'Nie udało się pobrać wyników'
+    });
   }
 });
 

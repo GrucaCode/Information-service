@@ -1,131 +1,130 @@
+import { toPLDate } from "./utils.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
   const qs = new URLSearchParams(location.search);
-  const tmpId   = qs.get("id");        // localStorage
-  const savedId = qs.get("savedId");   // zapisane wiadomości w bazie
+  const newsId = qs.get("id");    
+  const savedId = qs.get("savedId");   
 
-  const $ = (sel) => document.querySelector(sel);
-  const toPLDate = (d) => d ? new Date(d).toLocaleDateString("pl-PL") : "—";
+  const titleEl = document.querySelector(".data-news-title");
+  const imgEl = document.querySelector(".data-news-image");
+  const textEl = document.querySelector(".data-news-text");
+  const sumEl = document.querySelector(".data-news-sum");
+  const authorEl = document.querySelector(".data-news-author");
+  const dateEl = document.querySelector(".data-publish-date");
+  const newsSourceBtn = document.querySelector(".data-source-btn");
+  const saveBtn = document.querySelector(".data-save-btn");
+
   const splitIntoParagraphs = (text, maxSentencesPerPara = 4) => {
     if (!text) return [];
     const sentences = text.split(/(?<=[.!?])\s+/);
     const paras = [];
-    while (sentences.length) paras.push(sentences.splice(0, maxSentencesPerPara).join(" "));
+
+    for (let i = 0; i < sentences.length; i += maxSentencesPerPara) {
+      paras.push(sentences.slice(i, i + maxSentencesPerPara).join(" "));
+    }
+
     return paras;
   };
-  const buildLead = (text, fallback = "") => {
-    if (!text) return fallback || "";
-    const firstTwo = text.split(/(?<=[.!?])\s+/).slice(0, 2).join(" ");
-    return firstTwo || fallback || "";
+
+  const articleDataToObject = (articleData) => {
+    return {
+      id: articleData.id || null,
+      title: articleData.title || "",
+      image: articleData.image || articleData.urlToImage || "",
+      url: articleData.url || "#",
+      summary: articleData.summary || "",
+      text: articleData.text || "",
+      publishedAt: articleData.publish_date || articleData.publishedAt || null,
+      author: Array.isArray(articleData.authors)
+        ? articleData.authors.join(", ")
+        : (articleData.author || "")
+    };
   };
+
+  const getArticle = async (ids) => {
+    const res = await fetch(`/api/news/retrieve?ids=${encodeURIComponent(ids)}`);
+    const data = await res.json();
+
+    if (!res.ok || !data.success || !data.news?.length) {
+      throw new Error("Nie udało się pobrać artykułu z API");
+    }
+
+    return articleDataToObject(data.news[0]);
+  }
 
   let article = null;
 
-  // Pobieranie danych z artykułu 
-  try {
-    if (savedId) {
-      const r = await fetch(`/api/saved/${encodeURIComponent(savedId)}`);
-      if (r.status === 401) {
+  const renderArticle = (article) => {
+    const paras = splitIntoParagraphs(article.text, 5);
+
+    if (titleEl) titleEl.textContent = article.title;
+    if (imgEl) imgEl.setAttribute("src", `${article.image}`);
+    if (authorEl) authorEl.textContent = article.author;
+    if (dateEl) dateEl.textContent = toPLDate(article.publishedAt);
+    if (sumEl) sumEl.textContent = article.summary;
+    if (textEl) textEl.innerHTML = paras.map(p => `<p>${p}</p>`).join("");
+    if (newsSourceBtn) newsSourceBtn.href = article.url || "#";
+  }
+
+  const disableSaveBtn = () => {
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.classList.add("deactivated");
+    }
+  }
+
+  const saveArticle = async (article) => {
+    disableSaveBtn();
+    try {
+      const res = await fetch("/api/saved", {
+        method: "POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify({ id: article.id })
+      });
+
+      if (res.status === 401) {
+        alert("Zaloguj się, aby zapisać artykuł.");
         location.href = "profile.html?view=login";
         return;
+      } else if (!res.ok) {
+        throw new Error(`Request failed: ${res.status}`)
       }
-      const data = await r.json();
-      if (!data.success || !data.item) throw new Error("Nie znaleziono zapisanego artykułu. Prawdopodobnie został usunięty ze strony źródłowej. Wybierz inny artykuł z listy");
 
-      const it = data.item;
-      article = {
-        title: it.title || "",
-        image: it.image || "",
-        url:   it.url   || "#",
-        text:  it.summary || "",
-        publish_date: it.publishedAt || null,
-        author: it.author || ""
-      };
-    } else if (tmpId) {
-      const raw = localStorage.getItem(`article-${tmpId}`);
-      if (!raw) throw new Error("Artykuł wygasł lub nie istnieje.");
-      article = JSON.parse(raw);
-      article = {
-        title: article.title || "",
-        image: article.image || article.urlToImage || "",
-        url:   article.url   || "#",
-        text:  article.text  || article.content || article.description || "",
-        publish_date: article.publish_date || article.publishedAt || null,
-        author: article.author || ""
-      };
-    } else {
-      throw new Error("Brak identyfikatora artykułu w URL.");
+      const data = await res.json();
+      if (data.success) {
+        alert("Zapisano wiadomość w Twoim Profilu!");
+      } else {
+        alert("Nie udało się zapisać wiadomości, spróbuj ponownie");
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert("Błąd zapisu.");
+    } finally { 
+      saveBtn.disabled = false 
     }
+  }
+
+  try {  
+    if (newsId) {
+      article = await getArticle(newsId);
+      renderArticle(article);
+    } else {
+      throw new Error ("Failed to get any articles");
+    }
+     
   } catch (err) {
     console.error(err);
+
     document.body.innerHTML = `
       <main class="news"><div class="news__content">
         <p>${err.message}</p>
         <p><a href="index.html">← Wróć na stronę główną</a></p>
       </div></main>`;
-    return;
   }
 
-  const titleEl  = $(".data-news-title");
-  const imgEl    = $(".data-news-image");
-  const textEl   = $(".data-news-text");
-  const sumEl    = $(".data-news-sum");
-  const authorEl = $(".data-news-author");
-  const dateEl   = $(".data-publish-date");
-  const fullBtn  = $(".btn-full");
-  const saveBtn  = $("#save-article-btn");
-
-  if (titleEl)  titleEl.textContent = article.title || "";
-  if (imgEl)   { imgEl.src = article.image || ""; imgEl.alt = article.title || ""; }
-  if (authorEl) authorEl.textContent = article.author || "—";
-  if (dateEl)   dateEl.textContent   = toPLDate(article.publish_date);
-
-  const lead = article.summary || article.description || buildLead(article.text);
-  if (sumEl) sumEl.textContent = lead;
-
-  // dzielenie tekstu na akapity
-  if (textEl) {
-    const paras = splitIntoParagraphs(article.text, 5);
-    textEl.innerHTML = paras.map(p => `<p>${p}</p>`).join("");
-  }
-
-  if (fullBtn) fullBtn.href = article.url || "#";
-
-  // Przycisk zapisz wiadomość
-  if (savedId && saveBtn) {
-    saveBtn.setAttribute("disabled", "true");
-    saveBtn.style.backgroundColor = " #616161";
-  }
-
-  // Zapisywanie artykułu do profilu
-  if (!savedId && saveBtn) {
-    saveBtn.addEventListener("click", async () => {
-      saveBtn.disabled = true;
-      try {
-        const payload = {
-          title: article.title,
-          url: article.url,
-          image: article.image,
-          summary: article.text || "",
-          publishedAt: article.publish_date || null
-        };
-        const r = await fetch("/api/saved", {
-          method: "POST",
-          headers: { "Content-Type":"application/json" },
-          body: JSON.stringify(payload)
-        });
-        if (r.status === 401) {
-          alert("Zaloguj się, aby zapisać artykuł.");
-          location.href = "profile.html?view=login";
-          return;
-        }
-        const data = await r.json();
-        alert(data.success ? (data.message || "Zapisano wiadomość w Twoim Profilu!") : (data.message || "Nie udało się zapisać wiadomości, spróbuj ponownie"));
-      } catch (e) {
-        console.error(e);
-        alert("Błąd zapisu.");
-      } finally {
-        saveBtn.disabled = false;
-      }
-    });
+  // if (!savedId && saveBtn) {
+  if (saveBtn) {
+    saveBtn.addEventListener("click", () => saveArticle(article));
   }
 });
