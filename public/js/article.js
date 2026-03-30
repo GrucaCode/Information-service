@@ -1,3 +1,5 @@
+import { toPLDate } from "./utils.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
   const qs = new URLSearchParams(location.search);
   const newsId = qs.get("id");    
@@ -11,12 +13,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const dateEl = document.querySelector(".data-publish-date");
   const newsSourceBtn = document.querySelector(".data-source-btn");
   const saveBtn = document.querySelector(".data-save-btn");
-
-  const toPLDate = (date) => {
-    if (!date) return "—";
-    const dateObj = new Date(date);
-    return dateObj.toLocaleDateString("pl-PL");
-  }
 
   const splitIntoParagraphs = (text, maxSentencesPerPara = 4) => {
     if (!text) return [];
@@ -45,26 +41,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
   };
 
-  const getSavedArticle = async () => {
-    const res = await fetch(`/api/saved/${encodeURIComponent(savedId)}`);
-
-    if (res.status === 401) {
-      location.href = "profile.html?view=login";
-      throw new Error("Unauthorised access");
-    }
-
-    const data = await res.json();
-    if (!data.success || !data.item) {
-      throw new Error("Invalid response data");
-    }
-
-    const dataItem = data.item;
-
-    return articleDataToObject(dataItem)
-  } 
-
-  const getArticle = async () => {
-    const res = await fetch(`/api/news/retrieve?ids=${encodeURIComponent(newsId)}`);
+  const getArticle = async (ids) => {
+    const res = await fetch(`/api/news/retrieve?ids=${encodeURIComponent(ids)}`);
     const data = await res.json();
 
     if (!res.ok || !data.success || !data.news?.length) {
@@ -77,15 +55,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   let article = null;
 
   const renderArticle = (article) => {
+    const paras = splitIntoParagraphs(article.text, 5);
+
     if (titleEl) titleEl.textContent = article.title;
     if (imgEl) imgEl.setAttribute("src", `${article.image}`);
     if (authorEl) authorEl.textContent = article.author;
     if (dateEl) dateEl.textContent = toPLDate(article.publishedAt);
     if (sumEl) sumEl.textContent = article.summary;
-
-    const paras = splitIntoParagraphs(article.text, 5);
     if (textEl) textEl.innerHTML = paras.map(p => `<p>${p}</p>`).join("");
-
     if (newsSourceBtn) newsSourceBtn.href = article.url || "#";
   }
 
@@ -102,7 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const res = await fetch("/api/saved", {
         method: "POST",
         headers: { "Content-Type":"application/json" },
-        body: JSON.stringify(article)
+        body: JSON.stringify({ id: article.id })
       });
 
       if (res.status === 401) {
@@ -128,17 +105,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  try {
-    if (savedId) {
-      article = await getSavedArticle();
-      disableSaveBtn();
-    } else if (newsId) {
-      article = await getArticle();
+  try {  
+    if (newsId) {
+      article = await getArticle(newsId);
+      renderArticle(article);
     } else {
       throw new Error ("Failed to get any articles");
     }
-
-    renderArticle(article);
      
   } catch (err) {
     console.error(err);
@@ -150,7 +123,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       </div></main>`;
   }
 
-  if (!savedId && saveBtn) {
+  // if (!savedId && saveBtn) {
+  if (saveBtn) {
     saveBtn.addEventListener("click", () => saveArticle(article));
   }
 });
