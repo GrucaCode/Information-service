@@ -33,26 +33,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const renderResultCard = (article) => {
-      const date = toPLDate(article.publish_date);
+    const date = toPLDate(article.publish_date);
 
-      resultsWrap.insertAdjacentHTML('beforeend',`
-        <article class="result-card">
-          ${article.image ? `<img src="${article.image}" alt="${article.title}" class="result-card__img">`: ""}
-          <div class="result-card__content">
-            <h3 class="result-card__title">${article.title}</h3>
-              <div class="result-card__actions">
-                <button class="btn-read-more" data-article-id="${article.id}">
-                  <div class="btn-read-more__frame">Czytaj</div>
-                </button>
-              </div>
-            <img src="img/Menu line.svg" alt="linia dekoracyjna oddzielająca menu od tekstu" class="result-card__decor-line">
-            <div class="result-card__info">
-              <p class="result-card__label">Data:</p>
-              <p class="result-card__date">${date}</p>
+    resultsWrap.insertAdjacentHTML('beforeend',`
+      <article class="result-card">
+        ${article.image ? `<img src="${article.image}" alt="${article.title}" class="result-card__img">`: ""}
+        <div class="result-card__content">
+          <h3 class="result-card__title">${article.title}</h3>
+            <div class="result-card__actions">
+              <button class="btn-read-more" data-article-id="${article.id}">
+                <div class="btn-read-more__frame">Czytaj</div>
+              </button>
             </div>
+          <img src="img/Menu line.svg" alt="linia dekoracyjna oddzielająca menu od tekstu" class="result-card__decor-line">
+          <div class="result-card__info">
+            <p class="result-card__label">Data:</p>
+            <p class="result-card__date">${date}</p>
           </div>
-        </article>
-      `);
+        </div>
+      </article>
+    `);
   }
 
   const renderResults = (foundNews = []) => {
@@ -68,8 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const performSearch = async (e) => {
-    e.preventDefault();
+  const performSearch = async () => {
     const q = searchInput.value.trim();
     if (!q) {
       hideResults();
@@ -99,60 +98,70 @@ document.addEventListener('DOMContentLoaded', () => {
     goToArticle({id: newsId});
   });  
 
-  searchBtn?.addEventListener('click', (e) => performSearch(e));
+  searchBtn?.addEventListener('click', () => performSearch());
 
   searchInput?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') performSearch(e);
+    if (e.key === 'Enter') performSearch();
   });
 
   clearBtn?.addEventListener('click', (e) => clearResults(e));
 
-  
-  // Wyszukiwanie głosowe
+  // Voice search
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let listening = false;
 
-  if (micBtn && SpeechRecognition) {
+  const setVoiceSearchStateDefault = () => {
+    micIcon.textContent = 'mic';
+    listening = false;
+  }
+
+  const initializeSpeechRecog = () => {
     const recog = new SpeechRecognition();
+
     recog.lang = 'pl-PL';
     recog.interimResults = false;
     recog.maxAlternatives = 1;
 
-    let listening = false;
+    return recog;
+  }
 
-    micBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (!listening) {
-        try {
-          recog.start();
-          listening = true;
-          micIcon.textContent = 'settings_voice';
-        } catch (err) {
-          console.error(err);
-        }
-      } else {
-        recog.stop();
+  const handleMicClick = (e, recog) => {
+    e.preventDefault();
+
+    if (!listening) {
+      try {
+        recog.start();
+        listening = true;
+        micIcon.textContent = 'settings_voice';
+      } catch (err) {
+        console.error(err);
       }
-    });
+    } else {
+      recog.stop();
+    }
+  }
+
+  if (micBtn && SpeechRecognition) {
+    const recog = initializeSpeechRecog();
+
+    micBtn.addEventListener('click', (e) => handleMicClick(e, recog));
 
     recog.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       searchInput.value = transcript;
-      micIcon.textContent = 'mic';
-      listening = false;
+      setVoiceSearchStateDefault();
       performSearch();
     };
 
     recog.onerror = () => {
-      micIcon.textContent = 'mic';
-      listening = false;
+      setVoiceSearchStateDefault();
     };
 
     recog.onend = () => {
-      micIcon.textContent = 'mic';
-      listening = false;
+      setVoiceSearchStateDefault();
     };
 
-  } else if (micBtn) {
+  } else if (micBtn && !SpeechRecognition) {
     micBtn.addEventListener('click', (e) => {
       e.preventDefault();
       alert('Wyszukiwanie głosowe nie jest wspierane w tej przeglądarce.');

@@ -91,7 +91,6 @@ router.get('/retrieve', async (req, res) => {
 
 router.get('/search', async (req, res) => {
   const q = (req.query.q || '').trim();
-  const categories = (req.query.categories || '').trim();
   
   if (!q) return res.status(400).json({ 
     success: false, 
@@ -107,8 +106,6 @@ router.get('/search', async (req, res) => {
     'sort-direction': 'DESC',
     'api-key': apiKey,
   });
-
-  if (categories) params.set('categories', categories);
 
   const url = `${WORLDNEWS_BASE}/search-news?${params.toString()}`;
 
