@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return `
         <div class="saved-sec__wrapper saved" data-id="${item.id}">
           <div class="saved__img-container">
-            ${item.image ? `<img src="${item.image}" alt="" class="saved-sec__img">` : ""}
+            ${item.image ? `<img src="${item.image}" alt="${item.title}" class="saved-sec__img">` : ""}
           </div>
           <div class="saved__content">
             <h3 class="saved__title">${item.title}</h3>

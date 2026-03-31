@@ -8,7 +8,6 @@ import authRoutes from './routes/auth-route.js';
 import savedRoutes from './routes/saved-route.js';
 
 import sequelize from './database/db.js';
-import User from './models/User.js';
 
 const app = express();
 const PORT = 3000;
@@ -16,7 +15,6 @@ const PORT = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

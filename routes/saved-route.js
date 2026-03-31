@@ -3,13 +3,11 @@ import SavedArticle from '../models/SavedArticle.js';
 
 const router = express.Router();
 
-// middleware
 function requireAuth(req, res, next) {
   if (!req.session?.user) return res.status(401).json({ success:false, message:'Musisz być zalogowany' });
   next();
 }
 
-// zapisywanie artykułu
 router.post('/', requireAuth, async (req, res) => {
   try {
     const { id: newsId } = req.body;
@@ -32,13 +30,6 @@ router.post('/', requireAuth, async (req, res) => {
     const saved = await SavedArticle.create({
       userId: req.session.user.id,
       newsId
-      // title,
-      // url, 
-      // image: image || null,
-      // summary: summary || null,
-      // text: text || null,
-      // publishedAt: publishedAt ? new Date(publishedAt) : null,
-      // author: author
     });
 
     res.status(201).json({
@@ -74,21 +65,6 @@ router.get('/', requireAuth, async (req, res) => {
     });
   }
 });
-
-// pobranie jednego zapisu
-// router.get('/:id', requireAuth, async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const item = await SavedArticle.findOne({
-//       where: { id, userId: req.session.user.id }
-//     });
-//     if (!item) return res.status(404).json({ success: false, message: 'Nie znaleziono artykułu. Możliwe, że został usunięty ze strony źródłowej. Najlepiej usunąć go z listy zapisanych wiadomości' });
-//     res.json({ success: true, item });
-//   } catch (e) {
-//     console.error(e);
-//     res.status(500).json({ success: false, message: 'Błąd pobierania zapisu' });
-//   }
-// });
 
 router.delete('/:newsId', requireAuth, async (req, res) => {
   try {

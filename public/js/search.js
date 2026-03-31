@@ -1,46 +1,49 @@
+import { toPLDate } from "./utils.js";
+import { goToArticle } from "./utils.js";
+
 document.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('searchQuery');
+  const searchInput = document.getElementById('searchQuery');
   const searchBtn = document.querySelector('.search-btn');
   const micBtn = document.querySelector('.mic-btn');
   const micIcon = document.getElementById('mic-icon');
   const clearBtn = document.querySelector('.clean-btn');
-  const resultSec = document.querySelector('.result-sec');
+  const resultsWrap = document.querySelector('.results');
 
-  // Funkcja wyświetlająca wyniki wyszukiwania
-  function renderResults(news = []) {
-    const old = resultSec.querySelector('.results');
-    if (old) old.remove();
+  const hideResults = () => {
+    resultsWrap.innerHTML = '';
+    resultsWrap.setAttribute('hidden', true);
+  }
 
-    const wrap = document.createElement('div');
-    wrap.className = 'results';
-    if (!news.length) {
-      wrap.innerHTML = `<p>Nie znaleziono wyników dla podanego zapytania. Użyj innego słowa lub frazy</p><img src="img/Empty_graphics.svg" alt="Grafika informująca o braku wyników">`;
-      resultSec.appendChild(wrap);
-      return;
-    }
+  const prepareToRender = () => {
+    resultsWrap.innerHTML = '';
+    resultsWrap.removeAttribute('hidden');
+  }
 
-    // Wyświetlenie wyników wyszukiwania
-    news.forEach((article, idx) => {
-      const card = document.createElement('article');
-      card.className = 'result-card';
-      const img = article.image ? `<img class="result-card__img" src="${article.image}" alt="${article.title}">` : '';
-      const date = article.publish_date ? new Date(article.publish_date).toLocaleDateString('pl-PL') : '';
-      const summary = article.summary;
-      const artText =  article.text || '';
+  const clearResults = (e) => {
+    e.preventDefault();
+    searchInput.value = '';
+    hideResults();
+  }
 
-      const tmpId = `${Date.now()}-${idx}`;
-      const goLocalBtn = `
-        <button class="btn-read-more" data-article-id="${tmpId}">
-          <div class="btn-read-more__frame">Czytaj</div>
-        </button>
-      `;
+  const renderEmptyResults = () => {
+    resultsWrap.innerHTML = `
+      <p>Nie znaleziono wyników dla podanego zapytania. Użyj innego słowa lub frazy</p>
+      <img src="img/Empty_graphics.svg" alt="Grafika informująca o braku wyników">
+    `;
+  }
 
-      card.innerHTML = `
-        ${img}
+  const renderResultCard = (article) => {
+    const date = toPLDate(article.publish_date);
+
+    resultsWrap.insertAdjacentHTML('beforeend',`
+      <article class="result-card">
+        ${article.image ? `<img src="${article.image}" alt="${article.title}" class="result-card__img">`: ""}
         <div class="result-card__content">
           <h3 class="result-card__title">${article.title}</h3>
             <div class="result-card__actions">
-            ${goLocalBtn}
+              <button class="btn-read-more" data-article-id="${article.id}">
+                <div class="btn-read-more__frame">Czytaj</div>
+              </button>
             </div>
           <img src="img/Menu line.svg" alt="linia dekoracyjna oddzielająca menu od tekstu" class="result-card__decor-line">
           <div class="result-card__info">
@@ -48,121 +51,117 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="result-card__date">${date}</p>
           </div>
         </div>
-      `;
+      </article>
+    `);
+  }
 
-      // Zapisywnaie danych do localStorage do odczytu article.html
-      const payload = {
-        id: tmpId,
-        title: article.title,
-        author: article.author,
-        image: article.image,
-        url: article.url,
-        text: article.text || '',
-        summary: article.summary,
-        publish_date: article.publish_date,
-      };
-      localStorage.setItem(`article-${tmpId}`, JSON.stringify(payload));
-      wrap.appendChild(card);
-    });
+  const renderResults = (foundNews = []) => {
+    prepareToRender();
 
-    resultSec.appendChild(wrap);
-    wrap.querySelectorAll('.btn-read-more').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = e.currentTarget.getAttribute('data-article-id');
-        window.location.href = `article.html?id=${encodeURIComponent(id)}`;
-      });
+    if(!foundNews.length) {
+      renderEmptyResults();
+      return;
+    }
+
+    foundNews.forEach((article) => {
+      renderResultCard(article);
     });
   }
 
-  // Szukanie
-  async function performSearch() {
-    const q = input.value.trim();
+  const performSearch = async () => {
+    const q = searchInput.value.trim();
     if (!q) {
-      renderResultsAfterClear();
+      hideResults();
       return;
     }
     try {
-      renderResults([]); 
       const r = await fetch(`/api/news/search?q=${encodeURIComponent(q)}`);
       const data = await r.json();
+
       if (!data.success) {
         renderResults([]);
         return;
       }
-      // Wyszukiwania są zwracane z api w formie tablicy data.news
+
       renderResults(data.news || []);
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
       renderResults([]);
     }
   }
 
-  function renderResultsAfterClear(news = []) {
-    const old = resultSec.querySelector('.results');
-    if (old) old.remove();
-    }
+  resultsWrap.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-read-more');
+    if(!btn) return;
 
-  searchBtn?.addEventListener('click', (e) => {
-    e.preventDefault();
-    performSearch();
+    const newsId = btn.getAttribute('data-article-id');
+    goToArticle({id: newsId});
+  });  
+
+  searchBtn?.addEventListener('click', () => performSearch());
+
+  searchInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') performSearch();
   });
 
-  input?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      performSearch();
-    }
-  });
+  clearBtn?.addEventListener('click', (e) => clearResults(e));
 
-  clearBtn?.addEventListener('click', (e) => {
-    e.preventDefault();
-    input.value = '';
-    renderResultsAfterClear([]);
-  });
-
-  // Wyszukiwanie głosowe
+  // Voice search
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (micBtn && SpeechRecognition) {
+  let listening = false;
+
+  const setVoiceSearchStateDefault = () => {
+    micIcon.textContent = 'mic';
+    listening = false;
+  }
+
+  const initializeSpeechRecog = () => {
     const recog = new SpeechRecognition();
+
     recog.lang = 'pl-PL';
     recog.interimResults = false;
     recog.maxAlternatives = 1;
 
-    let listening = false;
+    return recog;
+  }
 
-    micBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (!listening) {
-        try {
-          recog.start();
-          listening = true;
-          micIcon.textContent = 'settings_voice';
-        } catch (err) {
-          console.error(err);
-        }
-      } else {
-        recog.stop();
+  const handleMicClick = (e, recog) => {
+    e.preventDefault();
+
+    if (!listening) {
+      try {
+        recog.start();
+        listening = true;
+        micIcon.textContent = 'settings_voice';
+      } catch (err) {
+        console.error(err);
       }
-    });
+    } else {
+      recog.stop();
+    }
+  }
+
+  if (micBtn && SpeechRecognition) {
+    const recog = initializeSpeechRecog();
+
+    micBtn.addEventListener('click', (e) => handleMicClick(e, recog));
 
     recog.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
-      input.value = transcript;
-      micIcon.textContent = 'mic';
-      listening = false;
+      searchInput.value = transcript;
+      setVoiceSearchStateDefault();
       performSearch();
     };
 
     recog.onerror = () => {
-      micIcon.textContent = 'mic';
-      listening = false;
+      setVoiceSearchStateDefault();
     };
 
     recog.onend = () => {
-      micIcon.textContent = 'mic';
-      listening = false;
+      setVoiceSearchStateDefault();
     };
-  } else if (micBtn) {
+
+  } else if (micBtn && !SpeechRecognition) {
     micBtn.addEventListener('click', (e) => {
       e.preventDefault();
       alert('Wyszukiwanie głosowe nie jest wspierane w tej przeglądarce.');
