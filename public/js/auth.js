@@ -7,10 +7,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const toggleToLoginBtn = document.getElementById("show-login");
   const toggleToRegisterBtn = document.getElementById("show-register");
 
-  const seePassBtn = document.querySelector(".see-pass-btn");
-  const passwordInput = document.getElementById("login-password");
-  const visibilityIcon = document.getElementById("eye-opened-icon");
-  const seePassText = document.querySelector(".data-see-pass-text");
+  const loginSeePassBtn = document.querySelector(".see-pass-btn");
+  const loginPasswordInput = document.getElementById("login-password");
+  const loginVisibilityIcon = document.getElementById("eye-opened-icon");
+  const loginSeePassText = document.querySelector(".data-see-pass-text");
 
   const regSeePassBtn = document.querySelector(".register-see-pass-btn");
   const regPasswordInput = document.querySelector("#register-form input[name='password']");
@@ -43,28 +43,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   ]
 
   const displayView = (section) => {
-    views.forEach(viewName => {
-      if (viewName === section) {
-        viewName.hidden = false;
+    views.forEach(view => {
+      if (view === section) {
+        view.hidden = false;
       } else {
-        viewName.hidden = true;
+        view.hidden = true;
       }
     });
   }
 
   if (view === "login") {
     displayView(loginSection);
-  } else if (view === "register") {
+  } else {
     displayView(registerSection);
   }
 
-  if (toggleToLoginBtn) {
-    toggleToLoginBtn.addEventListener("click", displayView(loginSection));
-  }
+  toggleToLoginBtn?.addEventListener("click", () => displayView(loginSection));
+  toggleToRegisterBtn?.addEventListener("click", () => displayView(registerSection));
 
-  if (toggleToRegisterBtn) {
-    toggleToRegisterBtn.addEventListener("click", displayView(registerSection));
-  }
 
   // Sprawdzenie czy użytkownik jest zalogowny - wyświetlenie odpowiedniego widoku
   fetch('/api/me')
@@ -160,27 +156,39 @@ document.addEventListener("DOMContentLoaded", async () => {
   const registerForm = document.querySelector(".data-register-form");
   registerForm?.addEventListener("submit", register); 
 
-  // Ukrywanie i pokazywanie hasła
-  if (seePassBtn && passwordInput && visibilityIcon) {
-    seePassBtn.addEventListener("click", (e) => {
-      e.preventDefault();
 
-      const isVisible = passwordInput.type === "text";
-      passwordInput.type = isVisible ? "password" : "text";
-      visibilityIcon.textContent = isVisible ? "visibility" : "visibility_off";
-      seePassText.textContent = isVisible ? "Zobacz hasło" : "Ukryj hasło";
-    });
+  const handlePassToggle = (passInput, seePassText, visibilityIcon, e) => {
+    e.preventDefault();
+
+    if (!passInput || !seePassText || !visibilityIcon) {
+      console.error("Nie znaleziono co najmniej jednego elementu", {
+        passInput,
+        seePassText,
+        visibilityIcon
+      })
+      return;
+    } 
+
+    const isPassVisible = passInput.type === "text";
+
+    passInput.type = isPassVisible ? "password" : "text";
+    visibilityIcon.textContent = isPassVisible ? "visibility" : "visibility_off";
+    seePassText.textContent = isPassVisible ? "Zobacz hasło" : "Ukryj hasło";
   }
 
-  if (regSeePassBtn && regPasswordInput && regVisibilityIcon) {
-    regSeePassBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      const isVisible = regPasswordInput.type === "text";
-      regPasswordInput.type = isVisible ? "password" : "text";
-      regVisibilityIcon.textContent = isVisible ? "visibility" : "visibility_off";
-      regSeePassText.textContent = isVisible ? "Zobacz hasło" : "Ukryj hasło";
-    });
-  }
+  regSeePassBtn?.addEventListener("click", (e) => handlePassToggle(
+    regPasswordInput, 
+    regSeePassText, 
+    regVisibilityIcon, 
+    e
+  ));
+
+  loginSeePassBtn?.addEventListener("click", (e) => handlePassToggle(
+    loginPassword, 
+    loginSeePassText, 
+    loginVisibilityIcon, 
+    e
+  ));
 
   const validateLoginInputs = () => {
     const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginEmail.value.trim());
