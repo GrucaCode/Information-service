@@ -65,14 +65,18 @@ router.post('/register', async (req, res) => {
     });
     
     // Automatyczne logowanie po rejestracji
-    req.session.user = {
-      id: newUser.id,
-      email: newUser.email,
-      firstName: newUser.firstName,
-      lastName: newUser.lastName
-    };
+    // req.session.user = {
+    //   id: newUser.id,
+    //   email: newUser.email,
+    //   firstName: newUser.firstName,
+    //   lastName: newUser.lastName
+    // };
 
-    res.json({ success: true, message: ''});
+    res.json({
+      success: true, 
+      message: 'Zarejestrowano pomyślnie'
+    });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: 'Błąd serwera przy rejestracji' });

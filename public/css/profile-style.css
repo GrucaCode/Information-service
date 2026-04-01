@@ -815,9 +815,6 @@ a {
   color: #020202;
 }
 
-.user-sec {
-  display: none;
-}
 .user-sec .logout-btn-wrapper {
   display: flex;
   align-items: center;
@@ -1041,10 +1038,6 @@ a {
   margin-bottom: 20px;
   font-weight: 600;
   font-size: 1rem;
-}
-
-#register-section {
-  display: none;
 }
 
 option {
