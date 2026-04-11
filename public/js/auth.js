@@ -1,3 +1,5 @@
+// TO DO: check and correct error handling 
+
 document.addEventListener("DOMContentLoaded", async () => {
   const loginSection = document.getElementById("login-section");
   const registerSection = document.getElementById("register-section");
@@ -8,7 +10,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const toggleToRegisterBtn = document.getElementById("show-register");
 
   const loginSeePassBtn = document.querySelector(".see-pass-btn");
-  const loginPasswordInput = document.getElementById("login-password");
   const loginVisibilityIcon = document.getElementById("eye-opened-icon");
   const loginSeePassText = document.querySelector(".data-see-pass-text");
 
@@ -17,21 +18,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   const regVisibilityIcon = document.querySelector("#register-form .see-pass-btn__visibility");
   const regSeePassText = document.querySelector("#register-form .see-pass-text");
 
-  const loginEmail = document.querySelector("#login-form input[name='email']");
-  const loginPassword = document.querySelector("#login-form input[name='password']");
   const loginBtn = document.querySelector(".data-login-submit-btn");
   const loginFrame = document.querySelector(".data-submit-frame");
+  const loginInputs = document.querySelectorAll("#login-form input");
+
+  const registerBtn = document.querySelector(".data-register-submit-btn");
+  const registerFrame = document.querySelector(".register-submit-btn__frame");
+  const registerInputs = document.querySelectorAll("#register-form input");
 
   const firstNameEl = document.getElementById("user-firstName");
   const lastNameEl = document.getElementById("user-lastName");
   const emailEl = document.getElementById("user-email");
-
-  const registerFirstName = document.querySelector("#register-form input[name='firstName']");
-  const registerLastName = document.querySelector("#register-form input[name='lastName']");
-  const registerEmail = document.querySelector("#register-form input[name='email']");
-  const registerPassword = document.querySelector("#register-form input[name='password']");
-  const registerBtn = document.querySelector(".data-register-submit-btn");
-  const registerFrame = document.querySelector(".register-submit-btn__frame");
 
   const params = new URLSearchParams(window.location.search);
   const view = params.get("view");
@@ -42,9 +39,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     userSection
   ]
 
-  const displayView = (section) => {
+  const displayView = (sectionToShow) => {
     views.forEach(view => {
-      if (view === section) {
+      if (view === sectionToShow) {
         view.hidden = false;
       } else {
         view.hidden = true;
@@ -52,40 +49,64 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  if (view === "login") {
-    displayView(loginSection);
-  } else {
-    displayView(registerSection);
+  // Vaildate logic
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+
+  const setSubmitBtn = (btn, frame, isValid) => {
+    btn.classList.toggle("active", isValid);
+    frame.classList.toggle("frame-active", isValid);
   }
 
-  toggleToLoginBtn?.addEventListener("click", () => displayView(loginSection));
-  toggleToRegisterBtn?.addEventListener("click", () => displayView(registerSection));
+  const validateLoginInputs = () => {
+    const email = loginForm.elements.email.value;
+    const pass = loginForm.elements.password.value;
+    const isValid = 
+        isValidEmail(email) && 
+        pass.trim().length > 0;
 
+        setSubmitBtn(loginBtn, loginFrame, isValid);
+  }
 
-  // Sprawdzenie czy użytkownik jest zalogowny - wyświetlenie odpowiedniego widoku
-  fetch('/api/me')
-  .then(res => res.json())
-  .then(data => {
-    if (data.loggedIn) {
-      displayView(userSection);
-      userNameSpans.forEach(span => span.textContent = data.user.firstName);
+  const validateRegisterInputs = () => {
+    const firstName = registerForm.elements.firstName.value;
+    const lastName = registerForm.elements.lastName.value;
+    const email = registerForm.elements.email.value;
+    const pass = registerForm.elements.password.value;
+    const isValid = 
+        firstName.trim().length > 0 && 
+        lastName.trim().length > 0 &&
+        isValidEmail(email) &&
+        pass.trim().length > 0;
 
-      if (firstNameEl && lastNameEl && emailEl) {
-        firstNameEl.textContent = data.user.firstName;
-        lastNameEl.textContent = data.user.lastName;
-        emailEl.textContent = data.user.email;
-      }
-    } else {
-      if (view === "register") {
-        displayView(registerSection);
-      } else {
-        displayView(loginSection);
-      }
-    }
-  });
+    setSubmitBtn(registerBtn, registerFrame, isValid);
+  } 
 
-  // Logowanie
-  document.getElementById("login-form").addEventListener("submit", async (e) => {
+  const handlePassToggle = (passInput, seePassText, visibilityIcon, e) => {
+    e.preventDefault();
+
+    if (!passInput || !seePassText || !visibilityIcon) {
+      console.error("Nie znaleziono co najmniej jednego elementu", {
+        passInput,
+        seePassText,
+        visibilityIcon
+      })
+      return;
+    } 
+
+    const isPassVisible = passInput.type === "text";
+
+    passInput.type = isPassVisible ? "password" : "text";
+    visibilityIcon.textContent = isPassVisible ? "visibility" : "visibility_off";
+    seePassText.textContent = isPassVisible ? "Zobacz hasło" : "Ukryj hasło";
+  }
+
+  //Login logic
+  const handleLogout = () => {
+    fetch("/api/logout", { method: "POST" })
+      .then(() => window.location.href = 'index.html');
+  }
+
+  const login = async (e) => {
     e.preventDefault();
     const form = e.target;
     const res = await fetch("/api/login", {
@@ -98,24 +119,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const data = await res.json();
+
     if (data.success) {
-      window.location.reload();
+      window.location.href = "profile.html";
     } else {
       document.getElementById("login-message").textContent = data.message || "Błąd logowania. Spróbuj zalogować się jeszcze raz";
     }
-  });
-
-  // Wylogowanie użytkownika
-  const logoutBtn = document.getElementById("logout-btn");
-  const logoutBtnProfile = document.querySelector(".data-logout-btn");
-
-  function handleLogout() {
-    fetch("/api/logout", { method: "POST" })
-      .then(() => window.location.href = 'index.html');
   }
-
-  logoutBtn?.addEventListener("click", handleLogout);
-  logoutBtnProfile?.addEventListener("click", handleLogout);
 
   const register = async (e) => {
     e.preventDefault();
@@ -143,8 +153,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const regSuccessMessage = document.querySelector(".data-reg-success-message");
       regSuccessMessage.hidden = false;
       regSuccessMessage.innerHTML = `<p class="success-message">Zarejestrowano pomyślnie!<p>`;
-      displayView(loginSection);
+      // TO DO: display success message in login view 
       form.reset();
+      window.location.href = "profile.html?view=login";
 
     } catch(err) {
       console.error("Failed to fetch register data", err);
@@ -152,29 +163,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  const registerMessage =  document.querySelector(".data-register-message");
+
+  // TO DO: Loader
+  const renderUserView = (user) => {
+    userNameSpans.forEach(span => span.textContent = user.firstName);
+
+    if (firstNameEl && lastNameEl && emailEl) {
+      firstNameEl.textContent = user.firstName;
+      lastNameEl.textContent = user.lastName;
+      emailEl.textContent = user.email;
+    }
+  }  
+
+  fetch('/api/me')
+  .then(res => res.json())
+  .then(data => {
+    if (!data.loggedIn) {
+      displayView(view === "register" ? registerSection : loginSection);
+    }
+    renderUserView(data.user);
+    displayView(userSection);
+  });
+
   const registerForm = document.querySelector(".data-register-form");
+  const registerMessage =  document.querySelector(".data-register-message");
   registerForm?.addEventListener("submit", register); 
 
+  toggleToLoginBtn?.addEventListener("click", () => 
+    window.location.href = "profile.html?view=login");
+  toggleToRegisterBtn?.addEventListener("click", () => 
+    window.location.href = "profile.html?view=register");
 
-  const handlePassToggle = (passInput, seePassText, visibilityIcon, e) => {
-    e.preventDefault();
-
-    if (!passInput || !seePassText || !visibilityIcon) {
-      console.error("Nie znaleziono co najmniej jednego elementu", {
-        passInput,
-        seePassText,
-        visibilityIcon
-      })
-      return;
-    } 
-
-    const isPassVisible = passInput.type === "text";
-
-    passInput.type = isPassVisible ? "password" : "text";
-    visibilityIcon.textContent = isPassVisible ? "visibility" : "visibility_off";
-    seePassText.textContent = isPassVisible ? "Zobacz hasło" : "Ukryj hasło";
-  }
+  // TO DO: create goToLogin/Register functions to reduce redundancy 
 
   regSeePassBtn?.addEventListener("click", (e) => handlePassToggle(
     regPasswordInput, 
@@ -183,46 +203,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     e
   ));
 
+  const loginForm = document.getElementById("login-form");
+
   loginSeePassBtn?.addEventListener("click", (e) => handlePassToggle(
-    loginPassword, 
+    loginForm.elements.password, 
     loginSeePassText, 
     loginVisibilityIcon, 
     e
   ));
 
-  const validateLoginInputs = () => {
-    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginEmail.value.trim());
-    const passwordValid = loginPassword.value.trim().length > 0;
+  loginForm?.addEventListener("submit", login);
 
-    if (emailValid && passwordValid) {
-      loginBtn.classList.add("active");
-      loginFrame.classList.add("frame-active");
-    } else {
-      loginBtn.classList.remove("active");
-      loginFrame.classList.remove("frame-active");
-    }
-  }
+  const logoutBtn = document.getElementById("logout-btn");
+  const logoutBtnProfile = document.querySelector(".data-logout-btn");
 
-  const validateRegisterInputs = () => {
-    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerEmail.value.trim());
-    const passwordValid = registerPassword.value.trim().length > 0;
-    const firstNameValid = registerFirstName.value.trim().length > 0;
-    const lastNameValid = registerLastName.value.trim().length > 0;
+  logoutBtn?.addEventListener("click", handleLogout);
+  logoutBtnProfile?.addEventListener("click", handleLogout);
 
-    if (emailValid && passwordValid && firstNameValid && lastNameValid) {
-      registerBtn.classList.add("active");
-      registerFrame.classList.add("frame-active");
-    } else {
-      registerBtn.classList.remove("active");
-      registerFrame.classList.remove("frame-active");
-    }
-  } 
+  loginInputs.forEach((input) => {
+    input.addEventListener("input", validateLoginInputs)
+  });
 
-  loginEmail.addEventListener("input", validateLoginInputs);
-  loginPassword.addEventListener("input", validateLoginInputs);
-
-  registerFirstName.addEventListener("input", validateRegisterInputs);
-  registerLastName.addEventListener("input", validateRegisterInputs);
-  registerEmail.addEventListener("input", validateRegisterInputs);
-  registerPassword.addEventListener("input", validateRegisterInputs);
+  registerInputs.forEach((input) => {
+    input.addEventListener("input", validateRegisterInputs)
+  });
 });
