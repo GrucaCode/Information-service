@@ -10,14 +10,21 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return res.status(401).json({ success: false, message: "Nieprawidłowy e-mail lub hasło. Spróbuj jeszcze raz" });
+      return res.status(401).json({ 
+        success: false,
+        message: "Nieprawidłowy e-mail lub hasło. Spróbuj jeszcze raz"
+      });
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      return res.status(401).json({ success: false, message: "Nieprawidłowy e-mail lub hasło. Spróbuj jeszcze raz" });
+      return res.status(401).json({
+        success: false,
+        message: "Nieprawidłowy e-mail lub hasło. Spróbuj jeszcze raz" 
+      });
     }
+
     req.session.user = {
       id: user.id,
       email: user.email,
@@ -28,7 +35,10 @@ router.post('/login', async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error("Błąd logowania:", error);
-    res.status(500).json({ success: false, message: "Błąd serwera" });
+    res.status(500).json({ 
+      success: false, 
+      message: "Błąd serwera"
+    });
   }
 });
 
@@ -40,7 +50,10 @@ router.post('/logout', (req, res) => {
 
 router.get('/me', (req, res) => {
   if (req.session.user) {
-    return res.json({ loggedIn: true, user: req.session.user });
+    return res.json({ 
+      loggedIn: true, 
+      user: req.session.user 
+    });
   }
   res.json({ loggedIn: false });
 });
@@ -63,14 +76,6 @@ router.post('/register', async (req, res) => {
       email,
       password: hashedPassword
     });
-    
-    // Automatyczne logowanie po rejestracji
-    // req.session.user = {
-    //   id: newUser.id,
-    //   email: newUser.email,
-    //   firstName: newUser.firstName,
-    //   lastName: newUser.lastName
-    // };
 
     res.json({
       success: true, 
