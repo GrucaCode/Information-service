@@ -16,7 +16,15 @@ a {
     color: $color-black;
 }
 
+.user-sec.is-hidden {
+    opacity: 0;
+    display: none;
+}
+
 .user-sec {
+    opacity: 1;
+    display: block;
+    transition: opacity 0.2s ease;
     .logout-btn-wrapper {
         display: flex;
         align-items: center;

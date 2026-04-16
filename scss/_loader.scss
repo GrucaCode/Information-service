@@ -1,0 +1,37 @@
+@use 'variables' as *;
+
+@keyframes loaderPulse {
+  0% {
+    transform: scale(0.96);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.96);
+  }
+}
+
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $color-white;
+    width: 100%;
+    margin: 80px 0;
+    &__img {
+        width: 200px;
+        animation: loaderPulse 1.4s ease-in-out infinite;
+    }
+    &__content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.loader.is-hidden {
+    display: none;
+    pointer-events: none;
+}

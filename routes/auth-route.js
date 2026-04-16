@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
     if (!passwordMatch) {
       return res.status(401).json({
         success: false,
-        message: "Nieprawidłowy e-mail lub hasło. Spróbuj jeszcze raz" 
+        message: "Nieprawidłowy e-mail lub hasło. Spróbuj jeszcze raz"
       });
     }
 
@@ -34,7 +34,7 @@ router.post('/login', async (req, res) => {
 
     res.json({ success: true });
   } catch (error) {
-    console.error("Błąd logowania:", error);
+    console.error("Login error:", error);
     res.status(500).json({ 
       success: false, 
       message: "Błąd serwera"
@@ -63,13 +63,16 @@ router.post('/register', async (req, res) => {
 
   try {
     const existingUser = await User.findOne({ where: { email } });
+
     if (existingUser) {
-      return res.status(400).json({ success: false, message: 'Ten użytkownik posiada już profil w aplikacji. Podaj inne dane lub zaloguj się' });
+      return res.status(400).json({
+        success: false, 
+        message: 'Ten użytkownik posiada już profil w aplikacji. Podaj inne dane lub zaloguj się'
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Utworzenie Usera
     const newUser = await User.create({
       firstName,
       lastName,
@@ -77,14 +80,17 @@ router.post('/register', async (req, res) => {
       password: hashedPassword
     });
 
-    res.json({
+    return res.json({
       success: true, 
       message: 'Zarejestrowano pomyślnie'
     });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: 'Błąd serwera przy rejestracji' });
+    console.error("Register error:", err);
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Błąd serwera przy rejestracji'
+    });
   }
 });
 

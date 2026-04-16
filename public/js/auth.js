@@ -1,10 +1,12 @@
-// TO DO: check and correct error handling 
+// TO DO: check and correct error handling
+import { showLoader, hideLoader } from "./utils.js"; 
 
 document.addEventListener("DOMContentLoaded", async () => {
+  showLoader()
+
   const loginSection = document.getElementById("login-section");
   const registerSection = document.getElementById("register-section");
   const userSection = document.getElementById("user-section");
-  const userNameSpans = document.querySelectorAll(".user-name");
 
   const toggleToLoginBtn = document.getElementById("show-login");
   const toggleToRegisterBtn = document.getElementById("show-register");
@@ -33,41 +35,89 @@ document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const view = params.get("view");
 
-  const views = [
-    loginSection,
-    registerSection,
-    userSection
-  ]
+  const views = [loginSection, registerSection, userSection]
 
+  // Managing views 
   const displayView = (sectionToShow) => {
+    if (views.length === 0 || !Array.isArray(views)) {
+      console.error("Views array is empty or invalid");
+      return;
+    }
+
     views.forEach(view => {
       if (view === sectionToShow) {
-        view.hidden = false;
+        view.classList.remove("is-hidden");
       } else {
-        view.hidden = true;
+        view.classList.add("is-hidden");
       }
     });
   }
 
+  const goToLoginView = () => {
+    window.location.href = "profile.html?view=login";
+  }
+
+  const goToRegisterView = () => {
+    window.location.href = "profile.html?view=register";
+  }
+
+  const renderUserView = (user) => {
+    if (!user) {
+      console.error("User object is missing");
+      return;
+    }
+
+    if (!firstNameEl || !lastNameEl || !emailEl) {
+      console.error("At least one element was not found: firstNameEl, lastNameEl or emailEl");
+      return;
+    }
+
+    firstNameEl.textContent = user.firstName;
+    lastNameEl.textContent = user.lastName;
+    emailEl.textContent = user.email;
+  }
+
   // Vaildate logic
-  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const isValidEmail = (email) => {
+    if (!email) {
+      console.error("Email object is missing");
+      return
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email.trim())
+  };
 
   const setSubmitBtn = (btn, frame, isValid) => {
+    if (!btn || !frame) {
+      console.error("Button or frame element is missing");
+      return;
+    }
+
     btn.classList.toggle("active", isValid);
     frame.classList.toggle("frame-active", isValid);
   }
 
   const validateLoginInputs = () => {
+    if (!loginForm || !loginBtn || !loginFrame) {
+      console.error("At least one element was not found or is undefined: loginForm, loginBtn or loginBtn");
+      return;
+    }
+
     const email = loginForm.elements.email.value;
     const pass = loginForm.elements.password.value;
     const isValid = 
         isValidEmail(email) && 
         pass.trim().length > 0;
-
         setSubmitBtn(loginBtn, loginFrame, isValid);
   }
 
   const validateRegisterInputs = () => {
+    if (!registerForm || !registerBtn || !registerFrame) {
+      console.error("At least one element was not found or is undefined: loginForm, registerBtn, registerFrame");
+      return;
+    }
+
     const firstName = registerForm.elements.firstName.value;
     const lastName = registerForm.elements.lastName.value;
     const email = registerForm.elements.email.value;
@@ -81,11 +131,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     setSubmitBtn(registerBtn, registerFrame, isValid);
   } 
 
-  const handlePassToggle = (passInput, seePassText, visibilityIcon, e) => {
+  const handleSeePassToggle = (passInput, seePassText, visibilityIcon, e) => {
     e.preventDefault();
 
     if (!passInput || !seePassText || !visibilityIcon) {
-      console.error("Nie znaleziono co najmniej jednego elementu", {
+      console.error("At least one element was not found: ", {
         passInput,
         seePassText,
         visibilityIcon
@@ -100,30 +150,74 @@ document.addEventListener("DOMContentLoaded", async () => {
     seePassText.textContent = isPassVisible ? "Zobacz hasło" : "Ukryj hasło";
   }
 
-  //Login logic
-  const handleLogout = () => {
-    fetch("/api/logout", { method: "POST" })
-      .then(() => window.location.href = 'index.html');
-  }
+  // Login logic
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("/api/logout", { method: "POST" });
+      const data = await res.json() 
+
+      if (!data.success || !res.ok) {
+        console.error("Failed to log out");
+        alert("Nie udało się wylogować. Spróbuj ponownie.");
+        return;
+      }
+
+      window.location.href = 'index.html';
+    } catch (err) {
+      console.error("Logout request failed:", err);
+      alert("Wystąpił problem podczas wylogowywania. Spróbuj ponownie później.");
+    }
+  };
 
   const login = async (e) => {
     e.preventDefault();
-    const form = e.target;
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: form.email.value,
-        password: form.password.value
-      })
-    });
 
-    const data = await res.json();
+    try {
+      const loginMessage = document.getElementById("login-message");
+      const form = e.target;
 
-    if (data.success) {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email.value,
+          password: form.password.value
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.status === 401) {
+        if (loginMessage) loginMessage.textContent = data.message;
+        return;
+      }
+
+      if (!res.ok) {
+        if (loginMessage) loginMessage.textContent = data.message;
+        console.error("Login request failed with status:", res.status);
+        return;
+      }
+
+      if (!data.success) {
+        if (loginMessage) loginMessage.textContent = "Nie udało się zalogować. Spróbuj ponownie"
+        console.error("Login failed: success=false")
+        return;
+      }
+
       window.location.href = "profile.html";
-    } else {
-      document.getElementById("login-message").textContent = data.message || "Błąd logowania. Spróbuj zalogować się jeszcze raz";
+    } catch (err) {
+      alert("Nie udało się zalogować. Spróbuj ponownie!");
+    }
+  }
+
+  // register logic
+  const regSuccessMessage = document.querySelector(".data-reg-success-message");
+  const displayRegMessage = () => {
+    const authMessage = sessionStorage.getItem("authMessage");
+    if (authMessage && regSuccessMessage) {
+      regSuccessMessage.hidden = false;
+      regSuccessMessage.textContent = authMessage;
+      sessionStorage.removeItem("authMessage");
     }
   }
 
@@ -145,67 +239,80 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const data = await res.json();
 
+      if (res.status === 400) {
+        if (registerMessage) registerMessage.textContent = data.message;
+        return
+      }
+
+      if (!res.ok) {
+        console.error("Register request failed with status:", res.status);
+        if (registerMessage) registerMessage.textContent = data.message || "Błąd serwera. Nie udało się zarejestrować. Spróbuj ponownie";
+        return
+      }
+
       if (!data.success) {
-        registerMessage.textContent = data.message || "Błąd rejestracji";
+        console.error("Register failed: success=false")
+        if (registerMessage) registerMessage.textContent = data.message || "Nie udało się zarejestrować. Spróbuj ponownie";
         return;
       }
 
-      const regSuccessMessage = document.querySelector(".data-reg-success-message");
-      regSuccessMessage.hidden = false;
-      regSuccessMessage.innerHTML = `<p class="success-message">Zarejestrowano pomyślnie!<p>`;
-      // TO DO: display success message in login view 
+      sessionStorage.setItem(
+        "authMessage",
+        "Zarejestrowano pomyślnie!"
+      )
+
       form.reset();
-      window.location.href = "profile.html?view=login";
+      goToLoginView()
 
     } catch(err) {
       console.error("Failed to fetch register data", err);
-      registerMessage.textContent = "Wystąpił błąd. Spróbuj ponownie później.";
+      if (registerMessage) registerMessage.textContent = "Nie udało się zarejestrować. Spróbuj ponownie.";
     }
   }
+  
+  displayRegMessage();
 
+  try {
+    const res = await fetch("/api/me");
+    const data = await res.json();
 
-  // TO DO: Loader
-  const renderUserView = (user) => {
-    userNameSpans.forEach(span => span.textContent = user.firstName);
-
-    if (firstNameEl && lastNameEl && emailEl) {
-      firstNameEl.textContent = user.firstName;
-      lastNameEl.textContent = user.lastName;
-      emailEl.textContent = user.email;
+    if (!res.ok) {
+      console.error("Fetching /api/me failed with status: ", res.status);
+      displayView(view === "register" ? registerSection : loginSection);
+      return;
     }
-  }  
 
-  fetch('/api/me')
-  .then(res => res.json())
-  .then(data => {
     if (!data.loggedIn) {
       displayView(view === "register" ? registerSection : loginSection);
+    } else {
+      renderUserView(data.user);
+      displayView(userSection);
     }
-    renderUserView(data.user);
-    displayView(userSection);
-  });
+  } catch (err) {
+    console.error("Error view display:", err);
+  } finally {
+    hideLoader();
+  }
 
   const registerForm = document.querySelector(".data-register-form");
-  const registerMessage =  document.querySelector(".data-register-message");
+  const registerMessage = document.querySelector(".data-register-message");
+  const loginForm = document.getElementById("login-form");
+  const logoutBtn = document.getElementById("logout-btn");
+  const logoutBtnProfile = document.querySelector(".data-logout-btn");
+
   registerForm?.addEventListener("submit", register); 
 
-  toggleToLoginBtn?.addEventListener("click", () => 
-    window.location.href = "profile.html?view=login");
-  toggleToRegisterBtn?.addEventListener("click", () => 
-    window.location.href = "profile.html?view=register");
+  toggleToLoginBtn?.addEventListener("click", goToLoginView);
+  toggleToRegisterBtn?.addEventListener("click", goToRegisterView);
 
-  // TO DO: create goToLogin/Register functions to reduce redundancy 
-
-  regSeePassBtn?.addEventListener("click", (e) => handlePassToggle(
+  regSeePassBtn?.addEventListener("click", (e) => handleSeePassToggle(
     regPasswordInput, 
     regSeePassText, 
     regVisibilityIcon, 
     e
   ));
 
-  const loginForm = document.getElementById("login-form");
-
-  loginSeePassBtn?.addEventListener("click", (e) => handlePassToggle(
+  loginSeePassBtn?.addEventListener("click", (e) => handleSeePassToggle(
     loginForm.elements.password, 
     loginSeePassText, 
     loginVisibilityIcon, 
@@ -213,10 +320,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   ));
 
   loginForm?.addEventListener("submit", login);
-
-  const logoutBtn = document.getElementById("logout-btn");
-  const logoutBtnProfile = document.querySelector(".data-logout-btn");
-
   logoutBtn?.addEventListener("click", handleLogout);
   logoutBtnProfile?.addEventListener("click", handleLogout);
 
