@@ -111,20 +111,30 @@
         </div>
     </header>
     <main>
-        <section id="login-section" class="login-sec">
+
+        <div class="loader data-loader">
+            <div class="loader__content data-loader-content">
+                <img src="./img/Logo.svg" alt="logo" class="loader__img data-loader-img">
+                <p class="loader__text data-loader-text">Strona ładuje się.</p>
+                <p class="loader__text data-loader-text">Poczekaj chwilę</p>
+            </div>
+        </div>
+
+        <section id="login-section" class="login-sec is-hidden">
             <div class="login-sec__title">
                 <i class="material-icons-outlined arrow-right">arrow_right</i>
                 <h2 class="login-sec__h">Logowanie</h2>
             </div>
+            <div class="data-reg-success-message success-message" hidden></div>
             <div class="login-sec__wrapper">
                 <p class="login-sec__quest--up login-sec__quest">Masz już założony profil użytkownika na Info Stracji?
                 </p>
                 <form id="login-form" class="login-form">
                     <label for="email" class="login-form__label">Adres e-mail:</label>
-                    <input type="email" id="email" name="email" placeholder="Wpisz e-mail" required
+                    <input type="email" id="login-email" name="email" placeholder="Wpisz e-mail" required
                         class="login-form__input data-register-input" autocomplete="email" />
                     <label for="password" class="login-form__label">Hasło:</label>
-                    <input type="password" id="password" name="password" placeholder="Wpisz hasło" required
+                    <input type="password" name="password" placeholder="Wpisz hasło" required
                         class="login-form__input data-register-input" id="login-password"
                         autocomplete="current-password" />
                     <div class="see-pass-btn-wrapper">
@@ -150,7 +160,7 @@
                 </button>
             </div>
         </section>
-        <section id="register-section" class="register-sec">
+        <section id="register-section" class="register-sec is-hidden">
             <div class="register-sec__title">
                 <i class="material-icons-outlined arrow-right">arrow_right</i>
                 <h2 class="register-sec__h">Rejestracja</h2>
@@ -203,7 +213,7 @@
                             </div>
                         </button>
                     </div>
-                    <div id="register-message" class="register-form__message"></div>
+                    <div id="register-message" class="register-form__message data-register-message"></div>
                     <button type="submit" class="register-submit-btn data-register-submit-btn">
                         <div class="register-submit-btn__frame data-submit-frame">
                             <p class="register-submit-btn__text">Zarejestruj się</p>
@@ -217,7 +227,7 @@
                 <p class="show-login-btn__text">Zaloguj się tutaj</p>
             </button>
         </section>
-        <section id="user-section" class="user-sec">
+        <section id="user-section" class="user-sec is-hidden">
             <div class="logout-btn-wrapper">
                 <p class="logout-btn-text">Wyloguj się</p>
                 <button class="logout-btn data-logout-btn">
@@ -244,11 +254,11 @@
                             <div class="user-data__info1">
                                 <div class="user-data__item">
                                     <p class="user-data__text user-data__label">Imię:</p>
-                                    <p class="user-data__text user-data__value" id="user-firstName">Anna</p>
+                                    <p class="user-data__text user-data__value" id="user-firstName"></p>
                                 </div>
                                 <div class="user-data__item">
                                     <p class="user-data__text user-data__label">Nazwisko:</p>
-                                    <p class="user-data__text user-data__value" id="user-lastName">Kowalska</p>
+                                    <p class="user-data__text user-data__value" id="user-lastName"></p>
                                 </div>
                             </div>
                         </div>
@@ -369,6 +379,7 @@
 
     <script type="module" src="js/utils.js"></script>
     <script type="module" src="js/profile.js"></script>
+    <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/fontAdjust.js"></script>
     <script type="module" src="js/upButton.js"></script>
     <script type="module" src="js/hamburgerMenu.js"></script>

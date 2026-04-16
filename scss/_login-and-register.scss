@@ -1,12 +1,26 @@
 @use 'variables' as *;
+@use 'loader.scss';
+
+.login-sec.is-hidden {
+    opacity: 0;
+    display: none;
+}
 
 .login-sec {
+    opacity: 1;
+    display: block;
+    transition: opacity 0.2s ease;
     &__wrapper {
         padding: 0 30px 30px;
     }
     &__title {
         display: flex;
         align-items: center;
+    }
+    .success-message {
+        width: 217px;
+        margin: 20px auto 30px;
+        color: $color-success;
     }
     &__h {
         font-size: 1.25rem;
@@ -120,7 +134,15 @@
     }
 }
 
+.register-sec.is-hidden {
+    opacity: 0;
+    display: none;
+}
+
 .register-sec {
+    opacity: 1;
+    display: block;
+    transition: opacity 0.2s ease;
     &__wrapper {
         padding: 0 30px 30px;
     }
