@@ -79,11 +79,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Vaildate logic
   const isValidEmail = (email) => {
-    if (!email) {
-      console.error("Email object is missing");
-      return
-    }
-
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email.trim())
   };
