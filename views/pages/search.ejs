@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Info Stacja - Wyszukiwarka</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
+  <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <link rel="stylesheet" href="css/search-style.css" />
+</head>
+
+<body>
+  <%- include('../partials/hamburgerMenu') %>
+  <header>
+    <%- include('../partials/topNavBar') %>
+    <div class="hero">
+      <h1>Wyszukiwarka</h1>
+      <p class="hero__text">Tutaj znajdziesz informacje za pomocą wyszukiwania głosowego lub poprzez
+        wpisywanie fraz</p>
+    </div>
+  </header>
+  <main>
+    <section class="search-sec">
+      <div class="search-sec__title">
+        <i class="material-icons-outlined arrow-right">arrow_right</i>
+        <h2 class="search-sec__h">Wyszukaj wiadomości</h2>
+      </div>
+      <div class="search-sec__wrapper search">
+        <div class="clean-btn-wrapper">
+          <p class="clean-text">Wyczyść formularz</p>
+          <button type="button" class="clean-btn data-clean-btn">
+            <div class="clean-btn__frame">
+              <i class="material-icons-outlined clean-btn__visibility" id="brush-icon">cleaning_services</i>
+            </div>
+          </button>
+        </div>
+        <div class="search__container">
+          <button class="search-btn">
+            <div class="search-btn__frame">
+              <i class="material-icons-outlined search-btn__glass" id="search-icon">search</i>
+            </div>
+          </button>
+          <div class="input-container">
+            <input type="text" id="searchQuery" placeholder="Jakiego artykułu szukasz?" class="search-input">
+            <button class="mic-btn">
+              <i class="material-icons-outlined mic-icon" id="mic-icon">mic</i>
+            </button>
+          </div>
+        </div>
+        <div class="search__info">
+          <p class="search__text">Szukaj</p>
+          <p class="search__text search__text--voice">Wyszukiwanie głosowe</p>
+        </div>
+      </div>
+    </section>
+    <section class="result-sec">
+      <div class="result-sec__title">
+        <i class="material-icons-outlined arrow-right">arrow_right</i>
+        <h2 class="result-sec__h">Wyniki</h2>
+      </div>
+      <div class="results" hidden></div>
+    </section>
+    <section class="articles-sec">
+      <div class="articles-sec__title">
+        <i class="material-icons-outlined arrow-right">arrow_right</i>
+        <h2 class="articles-sec__h">Inne wiadomości</h2>
+      </div>
+      <div class="slider">
+        <div class="slider__nav slider-nav">
+          <button class="slider-nav__arrow slider-nav__arrow--prev">
+            <i class="material-icons-outlined">arrow_back</i>
+            <p class="slider-nav__caption">Poprzedni</p>
+          </button>
+          <div class="material-icons-outlined slider__dots">
+          </div>
+          <button class="slider-nav__arrow  slider-nav__arrow--next">
+            <i class="material-icons-outlined">arrow_forward</i>
+            <p class="slider-nav__caption">Następny</p>
+          </button>
+        </div>
+        <div class="slider__slides"></div>
+      </div>
+    </section>
+  </main>
+  <%- include('../partials/footer') %>
+  <div class="space"></div>
+  <%- include('../partials/bottomNavBar') %>
+  <%- include('../partials/goUpBtn') %>
+  <%- include('../partials/tutorialsPopUp') %>
+
+  <script type="module" src="js/fontAdjust.js"></script>
+  <script type="module" src="js/news.js"></script>
+  <script type="module" src="js/upButton.js"></script>
+  <script type="module" src="js/hamburgerMenu.js"></script>
+  <script type="module" src="js/search.js"></script>
+  <script type="module" src="js/tutorials.js"></script>
+  <script type="module" src="js/voice-tutorial.js"></script>
+</body>
+
+</html>
