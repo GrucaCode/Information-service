@@ -6,7 +6,6 @@ I am continuously expanding my programming knowledge and see opportunities to fu
 
 Feel free to follow the repository to stay updated with upcoming improvements and changes!
 
-
 ## Application Structure
 
 The service consists of:
@@ -19,11 +18,11 @@ The service consists of:
 
 - **Article details subpage** – presenting the full content of the selected article with a link to the original source, and the option to save the article.
 
-
 ## Main Features
 
 All features are specially adapted for older adults and designed to make the application easier to use. You can see how they work in the demo app version, which will be available soon.
 Key features include:
+
 <div>
   <ul>
     <li>
@@ -53,7 +52,7 @@ Key features include:
 ## Technolgies
 
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![EJS](https://img.shields.io/badge/EJS-B4CA65?style=flat&logo=ejs)
 ![SCSS](https://img.shields.io/badge/SCSS-CC6699?logo=sass&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?logo=sqlite&logoColor=white)
