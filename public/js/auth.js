@@ -1,9 +1,6 @@
-// TO DO: check and correct error handling
 import { showLoader, hideLoader } from "./utils.js"; 
 
 document.addEventListener("DOMContentLoaded", async () => {
-  showLoader()
-
   const loginSection = document.getElementById("login-section");
   const registerSection = document.getElementById("register-section");
   const userSection = document.getElementById("user-section");
@@ -37,6 +34,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const views = [loginSection, registerSection, userSection]
 
+  showLoader()
+
   // Managing views 
   const displayView = (sectionToShow) => {
     if (views.length === 0 || !Array.isArray(views)) {
@@ -54,11 +53,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   const goToLoginView = () => {
-    window.location.href = "profile.html?view=login";
+    window.location.href = "/profile?view=login";
   }
 
   const goToRegisterView = () => {
-    window.location.href = "profile.html?view=register";
+    window.location.href = "/profile?view=register";
   }
 
   const renderUserView = (user) => {
@@ -157,7 +156,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      window.location.href = 'index.html';
+      window.location.href = '/';
     } catch (err) {
       console.error("Logout request failed:", err);
       alert("Wystąpił problem podczas wylogowywania. Spróbuj ponownie później.");
@@ -199,7 +198,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      window.location.href = "profile.html";
+      window.location.href = "/profile";
     } catch (err) {
       alert("Nie udało się zalogować. Spróbuj ponownie!");
     }

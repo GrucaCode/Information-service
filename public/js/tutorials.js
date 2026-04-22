@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const routes = {
-    voice:      { href: 'search.html',   flag: 'voice' }
+    voice:      { href: '/search',   flag: 'voice' }
   };
 
   modal.addEventListener('click', (e) => {
