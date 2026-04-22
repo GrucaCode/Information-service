@@ -1,4 +1,4 @@
-import { toPLDate } from "./utils.js";
+import { toPLDate, showLoader, hideLoader } from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const qs = new URLSearchParams(location.search);
@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const dateEl = document.querySelector(".data-publish-date");
   const newsSourceBtn = document.querySelector(".data-source-btn");
   const saveBtn = document.querySelector(".data-save-btn");
+
+  showLoader();
 
   const splitIntoParagraphs = (text, maxSentencesPerPara = 4) => {
     if (!text) return [];
@@ -84,7 +86,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (res.status === 401) {
         alert("Zaloguj się, aby zapisać artykuł.");
-        location.href = "profile.html?view=login";
+        location.href = "/profile?view=login";
         return;
       } else if (!res.ok) {
         throw new Error(`Request failed: ${res.status}`)
@@ -119,8 +121,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.body.innerHTML = `
       <main class="news"><div class="news__content">
         <p>${err.message}</p>
-        <p><a href="index.html">← Wróć na stronę główną</a></p>
+        <p><a href="/">← Wróć na stronę główną</a></p>
       </div></main>`;
+  } finally {
+    hideLoader();
   }
 
   // if (!savedId && saveBtn) {

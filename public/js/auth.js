@@ -1,9 +1,6 @@
-// TO DO: check and correct error handling
 import { showLoader, hideLoader } from "./utils.js"; 
 
 document.addEventListener("DOMContentLoaded", async () => {
-  showLoader()
-
   const loginSection = document.getElementById("login-section");
   const registerSection = document.getElementById("register-section");
   const userSection = document.getElementById("user-section");
@@ -36,6 +33,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const view = params.get("view");
 
   const views = [loginSection, registerSection, userSection]
+
+  showLoader()
 
   // Managing views 
   const displayView = (sectionToShow) => {

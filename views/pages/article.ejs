@@ -16,12 +16,14 @@
 </head>
 
 <body>
-  <%- include('../partials/hamburgerMenu')  %>
+  <%- include('../partials/hamburgerMenu') %>
   <header>
-    <%- include('../partials/topNavBar')  %>
+    <%- include('../partials/topNavBar') %>
     <div class="hero"></div>
   </header>
   <main class="news">
+    <%- include('../partials/loader') %>
+
     <div class="news__content">
       <h1 class="data-news-title news__title"></h1>
       <img src="/img/short_decor_line.svg" alt="Linia dekoracyjna oddzielająca tytuł od autora i daty opublikowania artykułu" class="news__decor-line">
