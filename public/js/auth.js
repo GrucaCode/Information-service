@@ -54,11 +54,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   const goToLoginView = () => {
-    window.location.href = "profile.html?view=login";
+    window.location.href = "/profile?view=login";
   }
 
   const goToRegisterView = () => {
-    window.location.href = "profile.html?view=register";
+    window.location.href = "/profile?view=register";
   }
 
   const renderUserView = (user) => {
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      window.location.href = 'index.html';
+      window.location.href = '/';
     } catch (err) {
       console.error("Logout request failed:", err);
       alert("Wystąpił problem podczas wylogowywania. Spróbuj ponownie później.");
@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      window.location.href = "profile.html";
+      window.location.href = "/profile";
     } catch (err) {
       alert("Nie udało się zalogować. Spróbuj ponownie!");
     }
