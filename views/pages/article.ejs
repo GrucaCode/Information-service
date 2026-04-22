@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Info Stacja - Artykuł</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
+  <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <link rel="stylesheet" href="css/article-style.css" />
+</head>
+
+<body>
+  <%- include('../partials/hamburgerMenu')  %>
+  <header>
+    <%- include('../partials/topNavBar')  %>
+    <div class="hero"></div>
+  </header>
+  <main class="news">
+    <div class="news__content">
+      <h1 class="data-news-title news__title"></h1>
+      <img src="/img/short_decor_line.svg" alt="Linia dekoracyjna oddzielająca tytuł od autora i daty opublikowania artykułu" class="news__decor-line">
+      <div class="news__data ">
+        <div class="news__author news-info">
+          <p class="author__label">Autor:</p>
+          <p class="data-news-author"></p>
+        </div>
+        <div class="news__date news-info">
+          <p class="date__label">Data:</p>
+          <p class="data-publish-date"></p>
+        </div>
+      </div>
+      <p class="data-news-sum news__sum"></p>
+      <div class="img-container">
+        <img class="data-news-image news__img" src="" alt="" />
+      </div>
+      <div class="data-news-text news__text"></div>
+      <div class="news__source news-source">
+        <div class="news-source__note">
+          <i class="material-icons-outlined arrow-right">arrow_right</i>
+          <a href="#" target="_blank" class="news-source__btn data-source-btn">Strona źródłowa artykułu</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+  <div class="space"></div>
+  <%- include('../partials/bottomNavBar') %>
+  <button id="save-article-btn" class="save-btn data-save-btn" type="button">
+    <div class="save-btn__frame">
+      <i class="material-icons-outlined save-btn__icon">save</i>
+      <p class="save-btn_text">Zapisz w profilu</p>
+    </div>
+  </button>
+  <%- include('../partials/goUpBtn') %>
+  <%- include('../partials/tutorialsPopUp') %>
+
+  <script type="module" src="js/article.js"></script>
+  <script type="module" src="js/utils.js"></script>
+  <script type="module" src="js/fontAdjust.js"></script>
+  <script type="module" src="js/upButton.js"></script>
+  <script type="module" src="js/hamburgerMenu.js"></script>
+  <script type="module" src="js/tutorials.js"></script>
+  <script type="module" src="js/voice-tutorial.js"></script>
+</body>
+
+</html>
