@@ -1,0 +1,55 @@
+<nav class="hamburger-menu" id="hamburgerMenu">
+  <div class="close-btn-wrapper">
+    <p class="close-btn-text">Zamknij Menu</p>
+    <button class="hamburger-menu__close-btn close-btn">
+      <div class="close-btn__frame">
+        <i class="material-icons-outlined close-btn__icon">close</i>
+      </div>
+    </button>
+  </div>
+  <ul class="hamburger-menu__list">
+    <li class="hamburger-menu__item hamburger-menu__item--home"><a href="/" class="hamburger-menu__link">Strona
+        Główna</a></li>
+    <li class="hamburger-menu__item"><a href="/search" class="hamburger-menu__link">Wyszukiwarka</a></li>
+    <li class="dropdown">
+      <div class="dropdown-toggle data-dropdown data-dropdown-cat">
+        <p class="dropdown-text">Kategorie wiadomości</p>
+        <button class="drop-up-btn">
+          <p class="drop-up-btn__text">rozwiń</p>
+          <i class="material-icons-outlined drop-up-btn__arrow">arrow_drop_down</i>
+        </button>
+      </div>
+      <ul class="dropdown-menu">
+        <li class="dropdown-menu__item"><a href="#" class="dropdown-menu__link">Polityka</a></li>
+        <li class="dropdown-menu__item"><a href="#" class="dropdown-menu__link">Biznes</a></li>
+        <li class="dropdown-menu__item"><a href="#" class="dropdown-menu__link">Sport</a></li>
+      </ul>
+    </li>
+    <li class="dropdown">
+      <div class="dropdown-toggle dropdown-profile data-dropdown data-dropdown-prof">
+        <a href="/profile" class="dropdown-text">Twój profil</a>
+        <button class="drop-up-btn">
+          <p class="drop-up-btn__text">rozwiń</p>
+          <i class="material-icons-outlined drop-up-btn__arrow">arrow_drop_down</i>
+        </button>
+      </div>
+      <ul class="dropdown-menu">
+        <li class="dropdown-menu__item logout-item">
+          <a href="#" class="dropdown-menu__link" id="logout-btn">Wyloguj się
+          </a>
+        </li>
+        <li class="dropdown-menu__item data-notlogged-item"><a href="/profile?view=login" class="dropdown-menu__link">Zaloguj się</a>
+        </li>
+        <li class="dropdown-menu__item data-notlogged-item"><a href="/profile?view=register" class="dropdown-menu__link">Zarejestruj
+            się</a></li>
+      </ul>
+    </li>
+    <li class="hamburger-menu__item hamburger-menu__item--tutorial"><a href="#" class="hamburger-menu__link js-open-tutorials data-hamburger-tut">Samouczek</a></li>
+    <li class="hamburger-menu__font-adjust-btn">
+      <a class="topbar-btn__link topbar-btn__link--aaa data-aaa " href="#">
+        <i class="material-icons-outlined data-icon-a-plus">text_increase</i>
+        <p class="topbar-btn__text">Dostosuj czcionkę</p>
+      </a>
+    </li>
+  </ul>
+</nav>

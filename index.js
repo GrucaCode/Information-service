@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import newsRoutes from './routes/news-route.js';
 import authRoutes from './routes/auth-route.js';
 import savedRoutes from './routes/saved-route.js';
+import pageRoutes from './routes/page-routes.js';
 
 import sequelize from './database/db.js';
 
@@ -14,6 +15,9 @@ const PORT = 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -24,12 +28,13 @@ app.use(session({
   saveUninitialized: false
 }));
 
-// front-end
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/news', newsRoutes);
 app.use('/api', authRoutes);
 app.use('/api/saved', savedRoutes);
+
+app.use('/', pageRoutes);
 
 app.listen(PORT, () => {
   console.log(`Serwer działa na http://localhost:${PORT}`);
