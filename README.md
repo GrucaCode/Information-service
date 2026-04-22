@@ -52,7 +52,7 @@ Key features include:
 ## Technolgies
 
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
-![EJS](https://img.shields.io/badge/EJS-B4CA65?style=flat&logo=ejs)
+![EJS](https://img.shields.io/badge/EJS-B4CA65?style=flat&logo=ejs&&logoColor=black)
 ![SCSS](https://img.shields.io/badge/SCSS-CC6699?logo=sass&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?logo=sqlite&logoColor=white)
