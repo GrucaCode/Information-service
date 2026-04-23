@@ -1,9 +1,8 @@
-import { toPLDate, showLoader, hideLoader } from "./utils.js";
+import { toPLDate, showLoader, hideLoader, checkUserLogin} from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const qs = new URLSearchParams(location.search);
-  const newsId = qs.get("id");    
-  const savedId = qs.get("savedId");   
+  const newsId = qs.get("id"); 
 
   const titleEl = document.querySelector(".data-news-title");
   const imgEl = document.querySelector(".data-news-image");
@@ -13,8 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const dateEl = document.querySelector(".data-publish-date");
   const newsSourceBtn = document.querySelector(".data-source-btn");
   const saveBtn = document.querySelector(".data-save-btn");
-
-  showLoader();
+  const articleContent = document.querySelector(".data-news-content");
 
   const splitIntoParagraphs = (text, maxSentencesPerPara = 4) => {
     if (!text) return [];
@@ -68,6 +66,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (newsSourceBtn) newsSourceBtn.href = article.url || "#";
   }
 
+  const renderEmptyArticle = () => {
+    articleContent.innerHTML = `
+      <main class="news">
+        <div class="news__content">
+          <p>Nie znaleziono artykułu</p>
+          <p><a href="/">← Wróć na stronę główną</a></p>
+        </div>
+      </main>`;
+  }
+
   const disableSaveBtn = () => {
     if (saveBtn) {
       saveBtn.disabled = true;
@@ -75,8 +83,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  const activateSaveBtn = () => {
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.classList.remove("deactivated");
+    }
+  }
+
+  const checkIfSaved = async () => {
+    try {    
+      const res = await fetch(`/api/saved/check/${encodeURIComponent(newsId)}`);
+      const data = await res.json();
+
+      if (res.status === 401) {
+        return false;
+      }
+      
+      if (!res.ok || !data.success) {
+        console.error("Failed to check saved status", res.status);
+        return false;
+      }
+
+      return data.saved;
+    } catch (err) {
+      console.error("Error checking saved article:", err);
+      return false;
+    }
+  }
+
   const saveArticle = async (article) => {
-    disableSaveBtn();
     try {
       const res = await fetch("/api/saved", {
         method: "POST",
@@ -94,41 +129,39 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const data = await res.json();
       if (data.success) {
+        disableSaveBtn();
         alert("Zapisano wiadomość w Twoim Profilu!");
       } else {
+        activateSaveBtn();
         alert("Nie udało się zapisać wiadomości, spróbuj ponownie");
       }
 
     } catch (err) {
       console.error(err);
       alert("Błąd zapisu.");
-    } finally { 
-      saveBtn.disabled = false 
+      saveBtn.disabled = false
     }
   }
+
+  showLoader();
 
   try {  
     if (newsId) {
       article = await getArticle(newsId);
+      const session = await checkUserLogin();
+      if (session) {
+          const isSaved = await checkIfSaved();
+          if (isSaved) disableSaveBtn();
+      }
       renderArticle(article);
     } else {
       throw new Error ("Failed to get any articles");
     }
-     
   } catch (err) {
-    console.error(err);
-
-    document.body.innerHTML = `
-      <main class="news"><div class="news__content">
-        <p>${err.message}</p>
-        <p><a href="/">← Wróć na stronę główną</a></p>
-      </div></main>`;
+    renderEmptyArticle();
   } finally {
     hideLoader();
   }
 
-  // if (!savedId && saveBtn) {
-  if (saveBtn) {
-    saveBtn.addEventListener("click", () => saveArticle(article));
-  }
+  saveBtn?.addEventListener("click", () => saveArticle(article));
 });

@@ -95,4 +95,29 @@ router.delete('/:newsId', requireAuth, async (req, res) => {
   }
 });
 
+router.get('/check/:newsId', requireAuth, async (req, res) =>{
+  try {
+    const { newsId } = req.params;
+    const existing = await SavedArticle.findOne({
+      where: {
+        userId: req.session.user.id,
+        newsId
+      }
+    })
+
+    return res.json({
+      success: true,
+      saved: !!existing
+    });
+
+  } catch (err) {
+    console.error(err);
+    
+    return res.status(500).json({
+      success: false,
+      message: 'Błąd sprawdzania zapisu artykułu'
+    });
+  }
+});
+
 export default router;

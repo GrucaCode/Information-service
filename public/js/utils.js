@@ -23,3 +23,23 @@ export const hideLoader = () => {
   if (!loader) return;
   loader.classList.add("is-hidden");
 }
+
+export const checkUserLogin = async () => {
+  try {
+    const res = await fetch("/api/me");
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error("Fetching /api/me failed with status: ", res.status);
+      return { loggedIn: false, user: null };
+    }
+
+    return {
+      loggedIn: !!data.loggedIn,
+      user: data.user
+    };
+  } catch (err) {
+    console.error("Failed to check user session:", err);
+    return { loggedIn: false, user: null };
+  }
+};

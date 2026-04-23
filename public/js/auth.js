@@ -1,4 +1,4 @@
-import { showLoader, hideLoader } from "./utils.js"; 
+import { showLoader, hideLoader, checkUserLogin} from "./utils.js"; 
 
 document.addEventListener("DOMContentLoaded", async () => {
   const loginSection = document.getElementById("login-section");
@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const toggleToRegisterBtn = document.getElementById("show-register");
 
   const loginSeePassBtn = document.querySelector(".see-pass-btn");
-  const loginVisibilityIcon = document.getElementById("eye-opened-icon");
+  const loginVisibilityIcon = document.querySelector(".data-see-pass-icon");
   const loginSeePassText = document.querySelector(".data-see-pass-text");
 
   const regSeePassBtn = document.querySelector(".register-see-pass-btn");
@@ -267,19 +267,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   displayRegMessage();
 
   try {
-    const res = await fetch("/api/me");
-    const data = await res.json();
-
-    if (!res.ok) {
-      console.error("Fetching /api/me failed with status: ", res.status);
-      displayView(view === "register" ? registerSection : loginSection);
-      return;
-    }
-
-    if (!data.loggedIn) {
+    const session = await checkUserLogin();
+    
+    if (!session.loggedIn) {
       displayView(view === "register" ? registerSection : loginSection);
     } else {
-      renderUserView(data.user);
+      renderUserView(session.user);
       displayView(userSection);
     }
   } catch (err) {
