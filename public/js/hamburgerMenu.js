@@ -20,26 +20,26 @@ const closeMenu = (e) => {
 }
 
 const handleDropdowns = (dropdownBtn) => {
-    const clickedDropdown = dropdownBtn.closest('.dropdown');
-    const isAlreadyOpen = clickedDropdown.classList.contains('open');
+  const clickedDropdown = dropdownBtn.closest('.dropdown');
+  const isAlreadyOpen = clickedDropdown.classList.contains('open');
 
-    const openDropdowns = document.querySelectorAll('.dropdown.open');
-    const openDropdownText = dropdownBtn.querySelector('.drop-up-btn__text');
-    const openDropdownArrow = dropdownBtn.querySelector('.drop-up-btn__arrow');
+  const openDropdowns = document.querySelectorAll('.dropdown.open');
+  const openDropdownText = dropdownBtn.querySelector('.drop-up-btn__text');
+  const openDropdownArrow = dropdownBtn.querySelector('.drop-up-btn__arrow');
 
-    openDropdowns.forEach(dropdown => {
-      dropdown.classList.remove('open');
-      const text = dropdown.querySelector('.drop-up-btn__text');
-      const icon = dropdown.querySelector('.drop-up-btn__arrow');
-      if (text) text.textContent = 'rozwiń';
-      if (icon) icon.textContent = 'arrow_drop_down';
-    });
+  openDropdowns.forEach(dropdown => {
+    dropdown.classList.remove('open');
+    const text = dropdown.querySelector('.drop-up-btn__text');
+    const icon = dropdown.querySelector('.drop-up-btn__arrow');
+    if (text) text.textContent = 'rozwiń';
+    if (icon) icon.textContent = 'arrow_drop_down';
+  });
 
-    if (!isAlreadyOpen) {
-      clickedDropdown.classList.add('open');
-      if (openDropdownText) openDropdownText.textContent = 'zwiń';
-      if (openDropdownArrow) openDropdownArrow.textContent = 'arrow_drop_up';
-    }
+  if (!isAlreadyOpen) {
+    clickedDropdown.classList.add('open');
+    if (openDropdownText) openDropdownText.textContent = 'zwiń';
+    if (openDropdownArrow) openDropdownArrow.textContent = 'arrow_drop_up';
+  }
 } 
 
 const updateAuthMenu = async () => {
@@ -80,7 +80,7 @@ const logout = async (e) => {
       throw new Error('Logout failed')
     }
 
-    location.href = 'index.html';
+    location.href = '/';
   } catch(err) {
     console.warn('Logout failed:', err);
   }
