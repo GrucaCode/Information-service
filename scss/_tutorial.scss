@@ -1,50 +1,81 @@
 @use 'variables' as *;
 
-.introjs-tooltip {
-  font-family: 'Poppins', sans-serif;
-  border-radius: 0;
+.driver-popover {
+    display: flex !important;
+    border-radius: 0;
+    flex-direction: column;
 }
-.introjs-button:focus .introjs-nextbutton {
-    outline: 0; 
-    text-decoration: none;
-    background-color: $color-dark-green;
-    box-shadow: 0;
-    border: 1px solid $color-black;
-    color: $color-white;
-    box-shadow: none;
+
+.driver-popover-close-btn {
+    align-self: flex-end;
+    background-color: $color-brown;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 20px;
+    position: relative;
+    font-size: 30px;
+    color: $color-white !important;
 }
-.introjs-button {
-    text-shadow: none;
-}
-.introjs-nextbutton {
-  background-color: $color-dark-green !important;
-  color: $color-white !important;
-  border: 0;
-  border-radius: 0;
-  padding: 20px 32px;
-  font-size: 16px;
-  font-family: 'Poppins', sans-serif;
-}
-.introjs-prevbutton {
-  background-color: $color-brown !important;
-  color: $color-white !important;
-  border: 0;
-  border-radius: 0;
-  padding: 20px 25px;
-  font-size: 16px;
-  font-family: 'Poppins', sans-serif;
-}
-.introjs-skipbutton {
-    right: 5px;
-    width: 80px;
-    font-size: 20px;
-    font-family: 'Poppins', sans-serif;
+
+.driver-popover-close-btn::after {
     color: $color-black;
-}
-.introjs-tooltiptext {
+    content: 'Zamknij';
+    font-size: 1rem;
+    position: absolute;
+    right: 55px;
+    top: 10px;
+} 
+
+.driver-popover-title {
     font-family: 'Poppins', sans-serif;
-    font-size: 20px;
+    font-size: 1.25rem;
 }
-.introjs-progressbar {
-    background-color: $color-dark-green;
+
+.driver-popover-description {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+}
+
+.driver-popover-footer {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    margin-top: 20px;
+}
+
+.driver-popover-navigation-btns {
+    gap: 5px;
+}
+
+.driver-popover-footer button {
+    text-shadow: none;
+    border: 0;
+    border-radius: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.driver-popover-next-btn {
+    background-color: $color-dark-green !important;
+    color: $color-white !important;
+    padding: 20px 32px !important;
+    font-size: 16px !important;
+}
+
+.driver-popover-prev-btn {
+    background-color: $color-brown !important;
+    color: $color-white !important;
+    padding: 20px 25px !important;
+    font-size: 16px !important;
+}
+
+.driver-popover-footer .driver-popover-btn-disabled {
+    background-color: $color-saved !important;
+    color: $color-black !important;
+}
+
+.driver-popover-progress-text {
+    align-self: start;
+    margin-top: 20px;
+    color: $color-dark-green !important;
+    font-family: 'Poppins', sans-serif !important;
 }
