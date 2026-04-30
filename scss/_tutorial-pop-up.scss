@@ -4,7 +4,7 @@ body.no-scroll{
     overflow: hidden;
 }
 
-.tuts{
+.tut{
     position:fixed;
     inset:0;
     display:none;
@@ -63,10 +63,10 @@ body.no-scroll{
         margin-top: 20px;
     }
 }
-.tuts[aria-hidden="false"] {
+.tut[aria-hidden="false"] {
     display:block;
 }
-.tuts-btn-text {
+.tut-btn-text {
     font-size: .75rem;
     padding: 20px 19px;
     border: 1px $color-white solid;
