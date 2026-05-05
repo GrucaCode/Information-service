@@ -1,73 +1,70 @@
 @use 'variables' as *;
 
-body.no-scroll {
+body.no-scroll{
     overflow: hidden;
 }
 
-.tut {
+.pop-up{
+    display:none;
     position:fixed;
     inset:0;
-    display:none;
     z-index:9999;
+
     &__backdrop {
         position: absolute;
         inset: 0;
         background: $color-shadow;
     }
-    &__wrapper {
+
+    &__title-wrapper {
         display: flex;
         gap: 20px;
         align-items: center;
         margin-bottom: 20px;
     }
+
     &__dialog {
+        width: min(92vw, 520px);
+        max-height: 85vh;
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%,-50%);
-        width: min(92vw, 520px);
-        max-height: 85vh;
         overflow: auto;
-        background: $color-white;
         padding: 16px;
+        background: $color-white;
         box-shadow: 0 10px 40px $color-shadow;
     }
+
     &__icon {
         font-size: 30px;
     }
+
     &__title {
         font-size: 1rem;
     }
+
     &__desc {
         margin:0 0 20px;
         font-size: .875rem;
     }
-    &__grid {
-        display: grid;
-        gap: 15px;
-    } 
-    &__btn {
-        padding: 3px;
-        background: $color-dark-green;
-        color: $color-white;
-        text-align: center;
-    }
-    &__mess {
-        color: $color-brown;
-        font-size: .875rem;
-        margin: 20px 0;
-        text-align: center;
-    }
-
-    &__font-adj {
-        margin-top: 20px;
-    }
 }
-.tut[aria-hidden="false"] {
+
+.pop-up[aria-hidden="false"] {
     display:block;
 }
-.tut-btn-text {
-    font-size: .75rem;
-    padding: 20px 19px;
-    border: 1px $color-white solid;
+
+.font-adj-btn {
+    min-width: 107px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    text-align: center;
+    background-color: transparent;
+
+    &__text {
+        margin-top: -5px;
+        font-size: .75rem;
+    }
 }

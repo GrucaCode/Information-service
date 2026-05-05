@@ -9,6 +9,14 @@ const getPendingTutorial = () => {
   }
 };
 
+const removePendingTutorial = () => {
+  try {
+    localStorage.removeItem('pendingTutorial');
+  } catch (err) {
+    console.error("Failed to remove pending tutorial", err);
+  }
+};
+
 const startVoiceTutorial = () => {
   const micBtn = document.querySelector('.mic-btn');
   const searchBtn = document.querySelector('.search-btn');
@@ -79,6 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const pendingTutorial = getPendingTutorial();
 
   if (pendingTutorial !== 'voice') return;
+
+  removePendingTutorial();
 
   startVoiceTutorial();
 });

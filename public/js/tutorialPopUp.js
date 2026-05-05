@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const dialog = document.querySelector('.data-tut-dialog');
   const background = document.querySelector('body');
   const openTutBtns = document.querySelectorAll('.data-open-tut-modal');
-  const closeTutBtns = modal.querySelectorAll('.data-close-pop-up-btn');
+  const closeTutBtns = modal.querySelectorAll('.js-close-pop-up-btn');
   const startTutorialBtn = modal.querySelector('.data-tut-btn');
   let lastFocused = null;
 
@@ -21,11 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
     lastFocused?.focus();
   }
 
-  const startTutorial = () => {
+  const redirectToTutorial = () => {
     try { 
       localStorage.setItem('pendingTutorial', 'voice'); 
     } catch(err) {
-      console.error("Failed to set pendingTutorial to voice");
+      console.error("Failed to set pendingTutorial to voice", err);
     }
     window.location.href = '/search';
   }
@@ -45,5 +45,5 @@ document.addEventListener('DOMContentLoaded', () => {
     } 
   });
 
-  startTutorialBtn?.addEventListener('click', startTutorial);
+  startTutorialBtn?.addEventListener('click', redirectToTutorial);
 });

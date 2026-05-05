@@ -78,19 +78,18 @@ table {
 }
 
 .top-bar {
-  z-index: 100;
   width: 100vw;
   height: auto;
-  padding: 10px 10px 0 10px;
   display: flex;
   flex-direction: column;
   position: fixed;
   top: 0;
+  z-index: 100;
+  padding: 10px 10px 0 10px;
   background-color: #fff;
 }
 .top-bar__item {
   list-style-type: none;
-  display: block;
 }
 .top-bar__list {
   display: flex;
@@ -99,27 +98,29 @@ table {
   margin-bottom: 10px;
 }
 
-.topbar-btn__link {
-  display: block;
+.topbar-control {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   text-align: center;
-  min-height: 44px;
+  background-color: transparent;
 }
-.topbar-btn__link--aaa {
-  display: block;
+.topbar-control--font-adj {
   min-width: 107px;
 }
-.topbar-btn__link--search {
-  display: block;
+.topbar-control--search {
   min-width: 56px;
 }
-.topbar-btn__link--menu {
-  display: block;
+.topbar-control--menu {
   min-width: 44px;
 }
-.topbar-btn__text {
+.topbar-control__text {
   margin-top: -5px;
   font-size: 0.75rem;
-  font-weight: 400;
+}
+
+.decor-line {
+  height: 2px;
 }
 
 .bottom-nav-bar-wrapper {
@@ -236,6 +237,33 @@ table {
   opacity: 1;
 }
 
+.close-btn-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+.close-btn-wrapper .close-btn-text {
+  font-size: 0.75rem;
+}
+.close-btn-wrapper .close-btn {
+  width: 44px;
+  height: 44px;
+  padding: 3px;
+  font-size: 0.875rem;
+  color: #fff;
+  background-color: #A23205;
+}
+.close-btn-wrapper .close-btn__frame {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: #fff 1px solid;
+}
+
 .hero {
   background: linear-gradient(180deg, rgba(131, 197, 190, 0.3) 0%, #FFDACE 100%);
   width: 100%;
@@ -337,32 +365,6 @@ table {
 .hamburger-menu .dropdown.open .dropdown-menu {
   display: block;
 }
-.hamburger-menu .close-btn-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-bottom: 30px;
-}
-.hamburger-menu .close-btn-wrapper .close-btn {
-  width: 44px;
-  height: 44px;
-  padding: 3px;
-  background-color: #A23205;
-  font-size: 0.875rem;
-  color: #fff;
-}
-.hamburger-menu .close-btn-wrapper .close-btn__frame {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: #fff 1px solid;
-  width: 38px;
-  height: 38px;
-}
-.hamburger-menu .close-btn-wrapper .close-btn-text {
-  font-size: 0.75rem;
-}
 
 .hamburger-menu.active {
   display: flex;
@@ -444,33 +446,6 @@ body.no-scroll {
   font-size: 0.75rem;
   padding: 20px 19px;
   border: 1px #fff solid;
-}
-
-.close-btn-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-bottom: 30px;
-}
-.close-btn-wrapper .close-btn {
-  width: 44px;
-  height: 44px;
-  padding: 3px;
-  background-color: #A23205;
-  font-size: 0.875rem;
-  color: #fff;
-}
-.close-btn-wrapper .close-btn__frame {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: #fff 1px solid;
-  width: 38px;
-  height: 38px;
-}
-.close-btn-wrapper .close-btn-text {
-  font-size: 0.75rem;
 }
 
 .driver-popover {

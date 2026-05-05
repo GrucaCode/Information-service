@@ -1,4 +1,4 @@
-const menuBtn = document.querySelector('.topbar-btn__link--menu');
+const menuBtn = document.querySelector('.topbar-control--menu');
 const menu = document.getElementById('hamburgerMenu');
 const closeBtn = document.querySelector('.hamburger-menu__close-btn');
 const hamburgerTutBtn = document.querySelector('.data-hamburger-tut');
