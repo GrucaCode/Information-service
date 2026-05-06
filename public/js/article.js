@@ -1,4 +1,10 @@
-import { toPLDate, showLoader, hideLoader, checkUserLogin} from "./utils.js";
+import { 
+  toPLDate, 
+  showLoader, 
+  hideLoader, 
+  checkUserLogin, 
+  handlePopUp,
+} from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const qs = new URLSearchParams(location.search);
@@ -120,7 +126,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       if (res.status === 401) {
-        alert("Zaloguj się, aby zapisać artykuł.");
+        // alert("Zaloguj się, aby zapisać artykuł.");
+        await handlePopUp('loginToSave');
+
         location.href = "/profile?view=login";
         return;
       } else if (!res.ok) {

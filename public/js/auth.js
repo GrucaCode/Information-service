@@ -1,4 +1,4 @@
-import { showLoader, hideLoader, checkUserLogin} from "./utils.js"; 
+import { showLoader, hideLoader, checkUserLogin, handlePopUp} from "./utils.js"; 
 
 document.addEventListener("DOMContentLoaded", async () => {
   const loginSection = document.getElementById("login-section");

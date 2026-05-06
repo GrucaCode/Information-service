@@ -1,5 +1,4 @@
-import { toPLDate } from "./utils.js";
-import { goToArticle } from "./utils.js";
+import { toPLDate, goToArticle, handlePopUp } from "./utils.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('searchQuery');
