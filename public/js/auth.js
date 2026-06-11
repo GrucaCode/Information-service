@@ -1,4 +1,4 @@
-import { showLoader, hideLoader, checkUserLogin} from "./utils.js"; 
+import { showLoader, hideLoader, checkUserLogin, handlePopUp} from "./utils.js"; 
 
 document.addEventListener("DOMContentLoaded", async () => {
   const loginSection = document.getElementById("login-section");
@@ -152,14 +152,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (!data.success || !res.ok) {
         console.error("Failed to log out");
-        alert("Nie udało się wylogować. Spróbuj ponownie.");
+        await handlePopUp('logoutFailure');
         return;
       }
 
       window.location.href = '/';
     } catch (err) {
       console.error("Logout request failed:", err);
-      alert("Wystąpił problem podczas wylogowywania. Spróbuj ponownie później.");
+      await handlePopUp('logoutError');
     }
   };
 
@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       window.location.href = "/profile";
     } catch (err) {
-      alert("Nie udało się zalogować. Spróbuj ponownie!");
+      await handlePopUp('loginError');
     }
   }
 

@@ -1,5 +1,4 @@
-import { toPLDate } from "./utils.js";
-import { goToArticle } from "./utils.js";
+import { toPLDate, goToArticle, handlePopUp } from "./utils.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('searchQuery');
@@ -164,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (micBtn && !SpeechRecognition) {
     micBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      alert('Wyszukiwanie głosowe nie jest wspierane w tej przeglądarce.');
+      await handlePopUp('noVoiceSearch');
     });
   }
 });

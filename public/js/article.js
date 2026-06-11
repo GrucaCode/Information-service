@@ -1,4 +1,10 @@
-import { toPLDate, showLoader, hideLoader, checkUserLogin} from "./utils.js";
+import { 
+  toPLDate, 
+  showLoader, 
+  hideLoader, 
+  checkUserLogin, 
+  handlePopUp,
+} from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const qs = new URLSearchParams(location.search);
@@ -120,7 +126,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       if (res.status === 401) {
-        alert("Zaloguj się, aby zapisać artykuł.");
+        await handlePopUp('loginToSave');
+
         location.href = "/profile?view=login";
         return;
       } else if (!res.ok) {
@@ -130,15 +137,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = await res.json();
       if (data.success) {
         disableSaveBtn();
-        alert("Zapisano wiadomość w Twoim Profilu!");
+        await handlePopUp('savingSuccess');
       } else {
         activateSaveBtn();
-        alert("Nie udało się zapisać wiadomości, spróbuj ponownie");
+        await handlePopUp('savingFailure');
       }
 
     } catch (err) {
       console.error(err);
-      alert("Błąd zapisu.");
+      await handlePopUp('savingError');
       saveBtn.disabled = false
     }
   }

@@ -1,20 +1,20 @@
 @use 'variables' as *;
 
 .top-bar {
-    z-index: 100;
     width: 100vw;
     height: auto;
-    padding: 10px 10px 0 10px;
     display: flex;
     flex-direction: column;
     position: fixed;
     top: 0;
+    z-index: 100;
+    padding: 10px 10px 0 10px;
     background-color: $color-white;
 
     &__item {
         list-style-type: none;
-        display: block;
     }
+    
     &__list {
         display: flex;
         justify-content: end;
@@ -22,28 +22,32 @@
         margin-bottom: 10px;
     }
 }
-.topbar-btn {
-    &__link {
-        display: block;
-        text-align: center;
-        min-height: 44px;
-        &--aaa {
-            display: block;
-            min-width: 107px;
-                
-        }
-        &--search {                    
-            display: block;
-            min-width: 56px;
-        }
-        &--menu {
-            display: block;
-            min-width: 44px;
-        }
+
+.topbar-control {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    background-color: transparent;
+
+    &--font-adj {
+        min-width: 107px;
     }
+
+    &--search {                    
+        min-width: 56px;
+    }
+
+    &--menu {
+        min-width: 44px;
+    }
+
     &__text {
         margin-top: -5px;
         font-size: .75rem;
-        font-weight: 400;
     }
+}
+
+.decor-line {
+    height: 2px;
 }

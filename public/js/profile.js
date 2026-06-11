@@ -1,5 +1,4 @@
-import { toPLDate } from "./utils.js";
-import { goToArticle } from "./utils.js";
+import { toPLDate, goToArticle, handlePopUp } from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const savedList = document.getElementById("saved-list");
@@ -99,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = await response.json();
 
       if (!data.success) {
-        alert("Nie udało się usunąć wiadomości.");
+        await handlePopUp('removingFailure');
         return;
       }
 
@@ -111,7 +110,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     } catch(err) {
       console.error(err);
-      alert('Nie udało się usunąć wiadomości. Błąd jest po stronie aplikacji, zgłoś do nas ten incydent, a my postaramy się jak najszybciej go rozwiązać');
+      await handlePopUp('removingError');
     }
   }
 
