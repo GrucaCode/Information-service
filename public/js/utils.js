@@ -44,7 +44,7 @@ export const checkUserLogin = async () => {
   }
 };
 
-const alertMessages = {
+const popUpMessages = {
     loginToSave: {
         title: 'Konieczność logowania',
         message: 'Zaloguj się, aby zapisać artykuł.',
@@ -94,11 +94,13 @@ export const handlePopUp = (key) => {
     const popUp = document.querySelector('.js-pop-up');
     const dialog = document.querySelector('.js-pop-up-dialog');
     const closeBtns = document.querySelectorAll('.js-close-pop-up-btn');
+    const okBtn = document.querySelector('.js-ok-btn');
     const popUpTitle = document.querySelector('.js-pop-up-title');
     const popUpText = document.querySelector('.js-pop-up-desc');
+    const popUpIcon = document.querySelector('.js-pop-up-icon');
     const background = document.querySelector('body');
     
-    const config = alertMessages[key];
+    const config = popUpMessages[key];
 
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
@@ -107,14 +109,30 @@ export const handlePopUp = (key) => {
     };
 
     const close = () => {
-      popUp.ariaHidden = 'true';
+      const activeElement = document.activeElement;
+
+      if (activeElement instanceof HTMLElement && popUp.contains(activeElement)) {
+        activeElement.blur();
+      }
+
+      if (
+        lastFocused instanceof HTMLElement &&
+        document.contains(lastFocused) &&
+        !popUp.contains(lastFocused)
+      ) {
+        lastFocused.focus({preventScroll: true});
+      } else {
+        document.activeElement?.blur();
+      }
+
       background.classList.remove('no-scroll');
-      lastFocused?.focus();
+      popUp.ariaHidden = 'true';
 
       closeBtns.forEach(btn => {
         btn.removeEventListener('click', close);
       });
 
+      okBtn.removeEventListener('click', close);
       document.removeEventListener('keydown', handleEscape);
 
       resolve();
@@ -123,7 +141,11 @@ export const handlePopUp = (key) => {
     popUpTitle.textContent = config.title;
     popUpText.textContent = config.message;
 
+    const fittedIcon = (key === 'savingSuccess') ? 'check_circle' : 'warning';
+    popUpIcon.textContent = fittedIcon;
+
     lastFocused = document.activeElement;
+
     popUp.ariaHidden = 'false';
     background.classList.add('no-scroll');
     dialog.focus();
@@ -132,6 +154,7 @@ export const handlePopUp = (key) => {
       btn.addEventListener('click', close);
     });
 
+    okBtn.addEventListener('click', close); 
     document.addEventListener('keydown', handleEscape);
   });
 }
