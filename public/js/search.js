@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (micBtn && !SpeechRecognition) {
     micBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      alert('Wyszukiwanie głosowe nie jest wspierane w tej przeglądarce.');
+      await handlePopUp('noVoiceSearch');
     });
   }
 });

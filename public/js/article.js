@@ -126,7 +126,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       if (res.status === 401) {
-        // alert("Zaloguj się, aby zapisać artykuł.");
         await handlePopUp('loginToSave');
 
         location.href = "/profile?view=login";
@@ -138,15 +137,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = await res.json();
       if (data.success) {
         disableSaveBtn();
-        alert("Zapisano wiadomość w Twoim Profilu!");
+        await handlePopUp('savingSuccess');
       } else {
         activateSaveBtn();
-        alert("Nie udało się zapisać wiadomości, spróbuj ponownie");
+        await handlePopUp('savingFailure');
       }
 
     } catch (err) {
       console.error(err);
-      alert("Błąd zapisu.");
+      await handlePopUp('savingError');
       saveBtn.disabled = false
     }
   }
