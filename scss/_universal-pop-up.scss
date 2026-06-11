@@ -5,10 +5,10 @@ body.no-scroll{
 }
 
 .pop-up{
-    display:none;
-    position:fixed;
-    inset:0;
-    z-index:9999;
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
 
     &__backdrop {
         position: absolute;
@@ -20,7 +20,8 @@ body.no-scroll{
         display: flex;
         gap: 20px;
         align-items: center;
-        margin-bottom: 20px;
+        justify-content: center;
+        margin: 60px 10px 20px;
     }
 
     &__dialog {
@@ -41,17 +42,39 @@ body.no-scroll{
     }
 
     &__title {
-        font-size: 1rem;
+        font-size: 1.3rem;
     }
 
     &__desc {
-        margin:0 0 20px;
+        max-width: 300px;
+        margin:0 auto 20px;
         font-size: .875rem;
+        text-align: center;
+    }
+
+    &__btns {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 60px;
+    }
+
+    .ok-btn {
+        display: flex;
+        padding: 3px;
+        background-color: $color-dark-green;
+        font-size: .875rem;
+        color: $color-white;
+
+        &__frame {
+            border: $color-white 1px solid;
+            padding: 13px 26px;
+        }
     }
 }
 
 .pop-up[aria-hidden="false"] {
-    display:block;
+    display: block;
 }
 
 .font-adj-btn {
