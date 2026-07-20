@@ -24,28 +24,28 @@
   <main class="news">
     <%- include('../partials/loader') %>
 
-    <div class="news__content data-news-content">
-      <h1 class="data-news-title news__title"></h1>
+    <div class="news__content js-news-content">
+      <h1 class="js-news-title news__title"></h1>
       <img src="/img/short_decor_line.svg" alt="Linia dekoracyjna oddzielająca tytuł od autora i daty opublikowania artykułu" class="news__decor-line">
       <div class="news__data ">
         <div class="news__author news-info">
           <p class="author__label">Autor:</p>
-          <p class="data-news-author"></p>
+          <p class="js-news-author"></p>
         </div>
         <div class="news__date news-info">
           <p class="date__label">Data:</p>
-          <p class="data-publish-date"></p>
+          <p class="js-publish-date"></p>
         </div>
       </div>
-      <p class="data-news-sum news__sum"></p>
+      <p class="js-news-sum news__sum"></p>
       <div class="img-container">
-        <img class="data-news-image news__img" src="" alt="" />
+        <img class="js-news-image news__img" src="" alt="" />
       </div>
-      <div class="data-news-text news__text"></div>
+      <div class="js-news-text news__text"></div>
       <div class="news__source news-source">
         <div class="news-source__note">
           <i class="material-icons-outlined arrow-right">arrow_right</i>
-          <a href="#" target="_blank" class="news-source__btn data-source-btn">Strona źródłowa artykułu</a>
+          <a href="#" target="_blank" class="news-source__btn js-source-btn">Strona źródłowa artykułu</a>
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@
   <%- include('../partials/footer') %>
   <div class="space"></div>
   <%- include('../partials/bottomNavBar') %>
-  <button id="save-article-btn" class="save-btn data-save-btn" type="button">
+  <button id="save-article-btn" class="save-btn js-save-btn" type="button">
     <div class="save-btn__frame">
       <i class="material-icons-outlined save-btn__icon">save</i>
       <p class="save-btn_text">Zapisz w profilu</p>

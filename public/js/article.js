@@ -10,15 +10,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   const qs = new URLSearchParams(location.search);
   const newsId = qs.get("id"); 
 
-  const titleEl = document.querySelector(".data-news-title");
-  const imgEl = document.querySelector(".data-news-image");
-  const textEl = document.querySelector(".data-news-text");
-  const sumEl = document.querySelector(".data-news-sum");
-  const authorEl = document.querySelector(".data-news-author");
-  const dateEl = document.querySelector(".data-publish-date");
-  const newsSourceBtn = document.querySelector(".data-source-btn");
-  const saveBtn = document.querySelector(".data-save-btn");
-  const articleContent = document.querySelector(".data-news-content");
+  const titleEl = document.querySelector(".js-news-title");
+  const imgEl = document.querySelector(".js-news-image");
+  const textEl = document.querySelector(".js-news-text");
+  const sumEl = document.querySelector(".js-news-sum");
+  const authorEl = document.querySelector(".js-news-author");
+  const dateEl = document.querySelector(".js-publish-date");
+  const newsSourceBtn = document.querySelector(".js-source-btn");
+  const saveBtn = document.querySelector(".js-save-btn");
+  const articleContent = document.querySelector(".js-news-content");
 
   const splitIntoParagraphs = (text, maxSentencesPerPara = 4) => {
     if (!text) return [];
