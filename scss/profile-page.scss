@@ -61,11 +61,9 @@ a {
         margin-bottom: 80px;
         &__wrapper {
             margin-bottom: 30px;
-        }
-        .data-data-sec {
             display: block;
         }
-        .data-data-sec.hidden {
+        &__wrapper.hidden {
             display: none;
         }
         &__title {
