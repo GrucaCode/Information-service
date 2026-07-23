@@ -32,25 +32,25 @@
         <i class="material-icons-outlined arrow-right">arrow_right</i>
         <h2 class="login-sec__h">Logowanie</h2>
       </div>
-      <div class="data-reg-success-message success-message" hidden></div>
+      <div class="js-reg-success-message success-message" hidden></div>
       <div class="login-sec__wrapper">
         <p class="login-sec__quest--up login-sec__quest">Masz już założony profil użytkownika na Info Stracji?</p>
         <form id="login-form" class="login-form">
           <label for="login-email" class="login-form__label">Adres e-mail:</label>
-          <input type="email" id="login-email" name="email" placeholder="Wpisz e-mail" required class="login-form__input data-register-input" autocomplete="email" />
+          <input type="email" id="login-email" name="email" placeholder="Wpisz e-mail" required class="login-form__input" autocomplete="email" />
           <label for="login-password" class="login-form__label">Hasło:</label>
-          <input type="password" name="password" placeholder="Wpisz hasło" required class="login-form__input data-register-input" id="login-password" autocomplete="current-password" />
+          <input type="password" name="password" placeholder="Wpisz hasło" required class="login-form__input" id="login-password" autocomplete="current-password" />
           <div class="see-pass-btn-wrapper">
-            <p class="see-pass-text data-see-pass-text">Zobacz hasło</p>
+            <p class="see-pass-text js-see-pass-text">Zobacz hasło</p>
             <button type="button" class="see-pass-btn">
               <div class="see-pass-btn__frame">
-                <i class="material-icons-outlined see-pass-btn__visibility data-see-pass-icon">visibility</i>
+                <i class="material-icons-outlined see-pass-btn__visibility js-see-pass-icon">visibility</i>
               </div>
             </button>
           </div>
           <div id="login-message" class="login-form__message"></div>
-          <button type="submit" class="login-submit-btn data-login-submit-btn">
-            <div class="login-submit-btn__frame data-submit-frame">
+          <button type="submit" class="login-submit-btn js-login-submit-btn">
+            <div class="login-submit-btn__frame js-submit-frame">
               <p class="login-submit-btn__text">Zaloguj się</p>
             </div>
           </button>
@@ -78,36 +78,36 @@
         <p class="register-sec__quest--up register-sec__quest">Nie masz jeszcze założonego profilu na Info
           Stacji?</p>
         <div class="clean-btn-wrapper">
-          <p class="clean-text data-clean-text">Wyczyść formularz</p>
+          <p class="clean-text">Wyczyść formularz</p>
           <button type="button" class="clean-btn">
             <div class="clean-btn__frame">
               <i class="material-icons-outlined clean-btn__visibility" id="brush-icon">cleaning_services</i>
             </div>
           </button>
         </div>
-        <form id="register-form" class="register-form data-register-form">
+        <form id="register-form" class="register-form js-register-form">
           <label for="firstName" class="register-form__label">Imię:</label>
-          <input type="text" id="firstName" name="firstName" placeholder="Wpisz imię" required autocomplete="given-name" class="register-form__input data-register-input" />
+          <input type="text" id="firstName" name="firstName" placeholder="Wpisz imię" required autocomplete="given-name" class="register-form__input" />
           <label for="lastName" class="register-form__label">Nazwisko:</label>
-          <input type="text" id="lastName" name="lastName" placeholder="Wpisz nazwisko" required autocomplete="family-name" class="register-form__input data-register-input" />
+          <input type="text" id="lastName" name="lastName" placeholder="Wpisz nazwisko" required autocomplete="family-name" class="register-form__input" />
           <div class="register-form__labels">
             <label for="email" class="register-form__label">E-mail:</label>
             <p class="register-form__label-additional">imię@example.com</p>
           </div>
-          <input type="email" id="email" name="email" placeholder="Wpisz e-mail" required autocomplete="email" class="register-form__input data-register-input" />
+          <input type="email" id="email" name="email" placeholder="Wpisz e-mail" required autocomplete="email" class="register-form__input" />
           <label for="password" class="register-form__label">Hasło:</label>
-          <input type="password" id="password" name="password" placeholder="Wpisz hasło" required class="register-form__input data-register-input" />
+          <input type="password" id="password" name="password" placeholder="Wpisz hasło" required class="register-form__input" />
           <div class="see-pass-btn-wrapper">
-            <p class="see-pass-text data-see-pass-text">Zobacz hasło</p>
+            <p class="see-pass-text js-see-pass-text">Zobacz hasło</p>
             <button type="button" class="see-pass-btn register-see-pass-btn">
               <div class="see-pass-btn__frame">
-                <i class="material-icons-outlined see-pass-btn__visibility data-see-pass-icon">visibility</i>
+                <i class="material-icons-outlined see-pass-btn__visibility js-see-pass-icon">visibility</i>
               </div>
             </button>
           </div>
-          <div id="register-message" class="register-form__message data-register-message"></div>
-          <button type="submit" class="register-submit-btn data-register-submit-btn">
-            <div class="register-submit-btn__frame data-submit-frame">
+          <div id="register-message" class="register-form__message js-register-message"></div>
+          <button type="submit" class="register-submit-btn js-register-submit-btn">
+            <div class="register-submit-btn__frame js-submit-frame">
               <p class="register-submit-btn__text">Zarejestruj się</p>
             </div>
           </button>
@@ -122,7 +122,7 @@
     <section id="user-section" class="user-sec is-hidden">
       <div class="logout-btn-wrapper">
         <p class="logout-btn-text">Wyloguj się</p>
-        <button class="logout-btn data-logout-btn">
+        <button class="logout-btn js-logout-btn">
           <div class="logout-btn__frame">
             <i class="material-icons-outlined logout-btn__exit">exit_to_app</i>
           </div>
@@ -133,7 +133,7 @@
           <i class="material-icons-outlined arrow-right">arrow_right</i>
           <h2 class="data-sec__h">Twoje dane</h2>
         </div>
-        <div class="data-sec__wrapper data-data-sec">
+        <div class="data-sec__wrapper js-data-sec">
           <div class="user-data__content">
             <div class="user-data__img-info1">
               <div class="user-data__avatar">
@@ -163,9 +163,9 @@
             </div>
           </div>
         </div>
-        <button class="profile-drop-up-btn data-drop-up">
-          <p class="profile-drop-up-btn__text data-drop-up-text">zwiń sekcje</p>
-          <i class="material-icons-outlined profile-drop-up-btn__arrow data-drop-up-icon">arrow_drop_up</i>
+        <button class="profile-drop-up-btn js-drop-up">
+          <p class="profile-drop-up-btn__text js-drop-up-text">zwiń sekcje</p>
+          <i class="material-icons-outlined profile-drop-up-btn__arrow js-drop-up-icon">arrow_drop_up</i>
         </button>
       </div>
 

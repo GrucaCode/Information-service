@@ -1,8 +1,8 @@
 const registerForm = document.getElementById("register-form");
 const cleanBtn = document.querySelector(".clean-btn");
 const registerMessage = document.getElementById("register-message")
-const registerBtn = registerForm?.querySelector(".data-register-submit-btn");
-const registerFrame = registerForm?.querySelector(".data-submit-frame");
+const registerBtn = registerForm?.querySelector(".js-register-submit-btn");
+const registerFrame = registerForm?.querySelector(".js-submit-frame");
 
 const updateSubmitState = () => {
   if (!registerForm || !registerBtn || !registerFrame) return;

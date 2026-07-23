@@ -1,7 +1,7 @@
-const dataDropUpBtn = document.querySelector(".data-drop-up");
-const dataSec = document.querySelector(".data-data-sec");
-const dataText = document.querySelector(".data-drop-up-text");
-const dataIcon = document.querySelector(".data-drop-up-icon");
+const dataDropUpBtn = document.querySelector(".js-drop-up");
+const dataSec = document.querySelector(".js-data-sec");
+const dataText = document.querySelector(".js-drop-up-text");
+const dataIcon = document.querySelector(".js-drop-up-icon");
 
 const toggleSection = (e) => {
     dataSec.classList.toggle('hidden');

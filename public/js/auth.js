@@ -9,19 +9,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   const toggleToRegisterBtn = document.getElementById("show-register");
 
   const loginSeePassBtn = document.querySelector(".see-pass-btn");
-  const loginVisibilityIcon = document.querySelector(".data-see-pass-icon");
-  const loginSeePassText = document.querySelector(".data-see-pass-text");
+  const loginVisibilityIcon = document.querySelector(".js-see-pass-icon");
+  const loginSeePassText = document.querySelector(".js-see-pass-text");
 
   const regSeePassBtn = document.querySelector(".register-see-pass-btn");
   const regPasswordInput = document.querySelector("#register-form input[name='password']");
   const regVisibilityIcon = document.querySelector("#register-form .see-pass-btn__visibility");
   const regSeePassText = document.querySelector("#register-form .see-pass-text");
 
-  const loginBtn = document.querySelector(".data-login-submit-btn");
-  const loginFrame = document.querySelector(".data-submit-frame");
+  const loginBtn = document.querySelector(".js-login-submit-btn");
+  const loginFrame = document.querySelector(".js-submit-frame");
   const loginInputs = document.querySelectorAll("#login-form input");
 
-  const registerBtn = document.querySelector(".data-register-submit-btn");
+  const registerBtn = document.querySelector(".js-register-submit-btn");
   const registerFrame = document.querySelector(".register-submit-btn__frame");
   const registerInputs = document.querySelectorAll("#register-form input");
 
@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // register logic
-  const regSuccessMessage = document.querySelector(".data-reg-success-message");
+  const regSuccessMessage = document.querySelector(".js-reg-success-message");
   const displayRegMessage = () => {
     const authMessage = sessionStorage.getItem("authMessage");
     if (authMessage && regSuccessMessage) {
@@ -281,11 +281,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     hideLoader();
   }
 
-  const registerForm = document.querySelector(".data-register-form");
-  const registerMessage = document.querySelector(".data-register-message");
+  const registerForm = document.querySelector(".js-register-form");
+  const registerMessage = document.querySelector(".js-register-message");
   const loginForm = document.getElementById("login-form");
   const logoutBtn = document.getElementById("logout-btn");
-  const logoutBtnProfile = document.querySelector(".data-logout-btn");
+  const logoutBtnProfile = document.querySelector(".js-logout-btn");
 
   registerForm?.addEventListener("submit", register); 
 
