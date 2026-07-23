@@ -356,10 +356,10 @@ table {
 .hamburger-menu .dropdown-menu .logout-item.visible {
   display: block;
 }
-.hamburger-menu .dropdown-menu .data-notlogged-item {
+.hamburger-menu .dropdown-menu .not-logged-item {
   display: block;
 }
-.hamburger-menu .dropdown-menu .data-notlogged-item.hidden {
+.hamburger-menu .dropdown-menu .not-logged-item.hidden {
   display: none;
 }
 .hamburger-menu .dropdown.open .dropdown-menu {

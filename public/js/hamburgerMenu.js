@@ -1,11 +1,11 @@
 const menuBtn = document.querySelector('.topbar-control--menu');
 const menu = document.getElementById('hamburgerMenu');
 const closeBtn = document.querySelector('.hamburger-menu__close-btn');
-const hamburgerTutBtn = document.querySelector('.data-hamburger-tut');
+const hamburgerTutBtn = document.querySelector('.js-hamburger-tut');
 const dropdownButtons = document.querySelectorAll('.drop-up-btn');
 const body = document.body;
 const logoutItem = document.querySelector('.logout-item');
-const authItems = document.querySelectorAll('.data-notlogged-item');
+const authItems = document.querySelectorAll('.js-notlogged-item');
 
 const openMenu = (e) => {
   e.preventDefault();

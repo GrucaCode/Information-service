@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('tutorial-modal');
-  const dialog = document.querySelector('.data-tut-dialog');
+  const dialog = document.querySelector('.js-tut-dialog');
   const background = document.querySelector('body');
-  const openTutBtns = document.querySelectorAll('.data-open-tut-modal');
+  const openTutBtns = document.querySelectorAll('.js-open-tut-modal');
   const closeTutBtns = modal.querySelectorAll('.js-close-pop-up-btn');
-  const startTutorialBtn = modal.querySelector('.data-tut-btn');
+  const startTutorialBtn = modal.querySelector('.js-tut-btn');
   let lastFocused = null;
 
   const openModal = (e) => {

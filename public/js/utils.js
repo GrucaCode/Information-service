@@ -13,13 +13,13 @@ let loaderShownAt = 0;
 let loaderTimeout = null;
 
 export const showLoader = () => {
-  const loader = document.querySelector(".data-loader");
+  const loader = document.querySelector(".js-loader");
   if (!loader) return;
   loader.classList.remove("is-hidden");
 }
 
 export const hideLoader = () => {
-  const loader = document.querySelector(".data-loader");
+  const loader = document.querySelector(".js-loader");
   if (!loader) return;
   loader.classList.add("is-hidden");
 }
