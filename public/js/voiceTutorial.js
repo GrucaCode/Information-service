@@ -21,8 +21,8 @@ const startVoiceTutorial = () => {
   const micBtn = document.querySelector('.mic-btn');
   const searchBtn = document.querySelector('.search-btn');
   const searchInput = document.querySelector('#searchQuery');
-  const cleanInputBtn = document.querySelector('.data-clean-btn');
-  const resultHeader = document.querySelector('.data-result-title');
+  const cleanInputBtn = document.querySelector('.js-clean-btn');
+  const resultHeader = document.querySelector('.js-result-title');
 
   const steps = [
     {
